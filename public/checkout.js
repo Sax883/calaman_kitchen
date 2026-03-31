@@ -3,11 +3,7 @@
 
 const CART_KEY = 'calamans-kitchen-cart';
 const ACTIVE_ORDER_KEY = 'ck-active-order-id';
-const isBackendOrigin = window.location.protocol.startsWith('http')
-  && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  && window.location.port === '3000';
-
-const API_BASE = isBackendOrigin ? '' : 'http://localhost:3000';
+const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
 
 function apiUrl(path) {
   return `${API_BASE}${path}`;
