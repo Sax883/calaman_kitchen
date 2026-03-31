@@ -96,6 +96,52 @@
       .payment-step-bar .step.active .step-label { color: var(--accent); }
       .payment-step-bar .step.done .step-label { color: #2a7a4f; }
 
+      .order-success-popup {
+        position: fixed;
+        inset: 0;
+        background: rgba(17, 11, 8, 0.62);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        z-index: 1200;
+      }
+      .order-success-popup.d-none {
+        display: none;
+      }
+      .order-success-popup-card {
+        width: min(100%, 28rem);
+        background: linear-gradient(180deg, rgba(255, 250, 243, 0.98), rgba(248, 241, 233, 0.98));
+        border: 1px solid rgba(31, 26, 22, 0.08);
+        border-radius: 1.5rem;
+        box-shadow: 0 24px 60px rgba(22, 15, 10, 0.28);
+        padding: 1.6rem;
+        text-align: center;
+      }
+      .order-success-popup-icon {
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(42,122,79,0.14);
+        color: #1a5c35;
+        font-size: 1.5rem;
+      }
+      .order-success-popup-order {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin: 0.9rem 0 1.2rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(230,187,99,0.14);
+        color: #7a5311;
+        font-weight: 700;
+        font-size: 0.82rem;
+      }
+
       /* Empty cart state */
       .empty-cart-state {
         text-align: center;
@@ -263,7 +309,32 @@
         .checkout-hero { padding: 2.5rem 0 2rem; }
         .checkout-main { padding: 2rem 0 3.5rem; }
         .bank-details-box .detail-row { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
-        .payment-step-bar .step-label { font-size: 0.62rem; }
+        .payment-step-bar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.95rem;
+        }
+        .payment-step-bar .step {
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 0.9rem;
+          width: 100%;
+        }
+        .payment-step-bar .step:not(:last-child)::after {
+          top: calc(100% + 0.15rem);
+          left: 1.05rem;
+          width: 2px;
+          height: 0.95rem;
+        }
+        .payment-step-bar .step-label {
+          margin-top: 0;
+          font-size: 0.74rem;
+          letter-spacing: 0.08em;
+        }
+        .order-success-popup-card {
+          padding: 1.35rem;
+        }
       }
     </style>
   </head>
@@ -538,6 +609,21 @@
 
       </div>
     </main>
+
+    <div id="order-success-popup" class="order-success-popup d-none" role="dialog" aria-modal="true" aria-labelledby="order-success-popup-title">
+      <div class="order-success-popup-card">
+        <div class="order-success-popup-icon">
+          <i class="bi bi-bag-check"></i>
+        </div>
+        <h2 id="order-success-popup-title" class="h4 mb-2">Order received</h2>
+        <p id="order-success-popup-text" class="text-muted mb-0">Your order has been sent successfully.</p>
+        <div id="order-success-popup-order" class="order-success-popup-order d-none">
+          <span>Order ID</span>
+          <strong id="order-success-popup-id">-</strong>
+        </div>
+        <button id="order-success-popup-close" type="button" class="btn btn-accent rounded-pill px-4 w-100">Continue</button>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="checkout.js"></script>

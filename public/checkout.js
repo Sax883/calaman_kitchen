@@ -36,6 +36,11 @@ const placeBtnSpinner= document.getElementById('place-order-spinner');
 const cartItemsEl    = document.getElementById('cart-items');
 const cartTotalEl    = document.getElementById('cart-total');
 const paymentPanelText = document.getElementById('payment-panel-text');
+const orderSuccessPopup = document.getElementById('order-success-popup');
+const orderSuccessPopupText = document.getElementById('order-success-popup-text');
+const orderSuccessPopupOrder = document.getElementById('order-success-popup-order');
+const orderSuccessPopupId = document.getElementById('order-success-popup-id');
+const orderSuccessPopupClose = document.getElementById('order-success-popup-close');
 
 // Bank refs
 const bankTransferBlock = document.getElementById('bank-transfer-block');
@@ -131,6 +136,77 @@ function setStep(stepIndex) {
     if (i < stepIndex)  el.classList.add('done');
     if (i === stepIndex) el.classList.add('active');
   });
+}
+
+function playCustomerOrderTone() {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) {
+      return;
+    }
+
+    const audioContext = new AudioContextClass();
+    const now = audioContext.currentTime;
+    const notes = [523.25, 659.25, 783.99];
+
+    notes.forEach((frequency, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      const start = now + index * 0.14;
+      const end = start + 0.18;
+
+      oscillator.type = 'sine';
+      oscillator.frequency.value = frequency;
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      gainNode.gain.setValueAtTime(0.0001, start);
+      gainNode.gain.exponentialRampToValueAtTime(0.15, start + 0.03);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, end);
+
+      oscillator.start(start);
+      oscillator.stop(end);
+    });
+
+    window.setTimeout(() => {
+      audioContext.close().catch(() => {});
+    }, 900);
+  } catch (_) {
+    // Ignore audio playback failures on restricted browsers.
+  }
+}
+
+function triggerOrderSuccessFeedback() {
+  playCustomerOrderTone();
+  if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+    navigator.vibrate([120, 70, 120]);
+  }
+}
+
+function showOrderSuccessPopup(order) {
+  if (!orderSuccessPopup || !orderSuccessPopupText || !orderSuccessPopupOrder || !orderSuccessPopupId) {
+    return;
+  }
+
+  const methodLabel = order.paymentMethodKey === 'cod'
+    ? 'Your order is now in the kitchen queue and you can pay on delivery.'
+    : 'Your order is now waiting for payment confirmation. Follow the next step on this page.';
+
+  orderSuccessPopupText.textContent = methodLabel;
+  orderSuccessPopupId.textContent = order.id || '-';
+  orderSuccessPopupOrder.classList.toggle('d-none', !order.id);
+  orderSuccessPopup.classList.remove('d-none');
+  document.body.style.overflow = 'hidden';
+  triggerOrderSuccessFeedback();
+}
+
+function hideOrderSuccessPopup() {
+  if (!orderSuccessPopup) {
+    return;
+  }
+
+  orderSuccessPopup.classList.add('d-none');
+  document.body.style.overflow = '';
 }
 
 window.copyText = function(text, btn) {
@@ -501,6 +577,8 @@ async function handlePlaceOrder(event) {
       showTrackerAfterCOD(result.order);
     }
 
+    showOrderSuccessPopup(result.order);
+
     connectCustomerStream(result.order.id);
     startPolling(result.order.id);
   } catch (err) {
@@ -547,6 +625,16 @@ async function initializeCheckout() {
   bankSubmitBtn.addEventListener('click', () => submitPaymentEvidence('bank'));
   cryptoSubmitBtn.addEventListener('click', () => submitPaymentEvidence('crypto'));
   newOrderBtn.addEventListener('click', handleNewOrder);
+  if (orderSuccessPopupClose) {
+    orderSuccessPopupClose.addEventListener('click', hideOrderSuccessPopup);
+  }
+  if (orderSuccessPopup) {
+    orderSuccessPopup.addEventListener('click', (event) => {
+      if (event.target === orderSuccessPopup) {
+        hideOrderSuccessPopup();
+      }
+    });
+  }
 }
 
 initializeCheckout();

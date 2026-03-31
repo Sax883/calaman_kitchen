@@ -793,11 +793,31 @@ h3,
 .order-card {
   padding: 1.5rem;
   height: 100%;
+  color: var(--surface-strong);
 }
 
 .admin-order-card {
   display: flex;
   flex-direction: column;
+}
+
+.admin-order-card h2,
+.admin-order-card h3,
+.admin-order-card strong,
+.admin-order-card div,
+.admin-order-card li {
+  color: var(--surface-strong);
+}
+
+.admin-order-card .text-muted,
+.admin-order-card .small.text-muted,
+.admin-order-card .admin-order-grid span,
+.admin-order-card .timeline-list li div {
+  color: var(--muted) !important;
+}
+
+.admin-order-card ul {
+  padding-left: 1.15rem;
 }
 
 .order-card .badge {
