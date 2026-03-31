@@ -1,0 +1,12 @@
+{
+  "name": "calaman-kitchen",
+  "version": "1.0.0",
+  "description": "Calaman Kitchen ordering website with admin notifications",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.3"
+  }
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Progress - Calaman's Kitchen</title>
+    <meta name="description" content="Track your Calaman's Kitchen order progress and confirmation updates." />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body { padding-top: 5rem; background: var(--bg); }
+      .status-hero {
+        padding: 3rem 0 2rem;
+        background: linear-gradient(135deg, #17110d 0%, #2d1a0f 100%);
+        color: #fff;
+      }
+      .status-main { padding: 3rem 0 5rem; }
+      .status-shell { max-width: 900px; margin: 0 auto; }
+      .empty-order-state { text-align: center; padding: 4rem 2rem; }
+      .empty-order-state i { font-size: 3.25rem; color: var(--muted); opacity: 0.45; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark py-3 fixed-top nav-shell">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-3" href="index.html#top">
+          <span class="brand-mark">CK</span>
+          <span>
+            <span class="brand-title d-block brand-emphasis">Calaman's Kitchen</span>
+            <small class="brand-subtitle">Nigerian cuisine, plated with precision</small>
+          </span>
+        </a>
+        <a href="index.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
+          <i class="bi bi-arrow-left me-1"></i>Back to home
+        </a>
+      </div>
+    </nav>
+
+    <div class="status-hero">
+      <div class="container text-center">
+        <h1 class="h2 mb-2" style="font-family:'Cormorant Garamond',serif;">Order progress</h1>
+        <p class="mb-0" style="color:rgba(255,255,255,0.68);font-size:0.95rem;">Track payment confirmation, kitchen updates, and final delivery status.</p>
+      </div>
+    </div>
+
+    <main class="status-main">
+      <div class="container">
+        <div id="empty-order-section" class="status-shell d-none">
+          <div class="checkout-card empty-order-state">
+            <i class="bi bi-receipt-cutoff"></i>
+            <h2 class="h4 mt-3 mb-2">No active order found</h2>
+            <p class="text-muted mb-4">Place an order first, then return here to track progress and confirmation.</p>
+            <a href="index.html" class="btn btn-accent btn-lg rounded-pill px-5">Browse the menu</a>
+          </div>
+        </div>
+
+        <div id="status-content" class="status-shell d-none">
+          <div class="checkout-card p-4 p-lg-5">
+            <h2 class="mb-1">Order progress</h2>
+            <p class="text-muted small mb-4">Updates are shown live and rechecked automatically.</p>
+
+            <div class="status-grid mb-4">
+              <div class="status-tile">
+                <span>Order ID</span>
+                <strong id="order-id-display">—</strong>
+              </div>
+              <div class="status-tile">
+                <span>Payment status</span>
+                <strong id="payment-status-display">—</strong>
+              </div>
+              <div class="status-tile">
+                <span>Kitchen status</span>
+                <strong id="kitchen-status-display">—</strong>
+              </div>
+              <div class="status-tile">
+                <span>Ready in</span>
+                <strong id="ready-time-display">Awaiting kitchen update</strong>
+              </div>
+            </div>
+
+            <div class="timeline-track" id="order-timeline"></div>
+
+            <div class="d-flex flex-wrap gap-3 mt-4">
+              <a href="index.html#checkout" class="btn btn-dark rounded-pill px-4">Order more items</a>
+              <button id="new-order-btn" class="btn btn-outline-dark rounded-pill px-4" type="button">New order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="order-status.js"></script>
+  </body>
+</html>

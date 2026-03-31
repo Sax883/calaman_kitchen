@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — Calaman's Kitchen</title>
+    <meta name="description" content="Complete your order at Calaman's Kitchen. Review your cart, fill in delivery details, and pay securely." />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* ── Checkout page overrides ── */
+      body { padding-top: 5rem; background: var(--bg); }
+
+      .checkout-hero {
+        padding: 3.5rem 0 2.5rem;
+        background: linear-gradient(135deg, #17110d 0%, #2d1a0f 100%);
+        color: #fff;
+        margin-bottom: 0;
+      }
+
+      .checkout-hero .breadcrumb-item a { color: var(--gold); text-decoration: none; }
+      .checkout-hero .breadcrumb-item.active { color: rgba(255,255,255,0.6); }
+      .checkout-hero .breadcrumb-separator { color: rgba(255,255,255,0.35); }
+
+      .checkout-main { padding: 3.5rem 0 5rem; }
+
+      /* Payment step indicator */
+      .payment-step-bar {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 2.5rem;
+      }
+      .payment-step-bar .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+      }
+      .payment-step-bar .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 1.1rem;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background: var(--line);
+        z-index: 0;
+      }
+      .payment-step-bar .step.done::after { background: var(--accent); }
+      .step-dot {
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        background: #e9e3d8;
+        border: 2px solid var(--line);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 0.8rem;
+        position: relative;
+        z-index: 1;
+        transition: all 250ms;
+      }
+      .payment-step-bar .step.active .step-dot {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .payment-step-bar .step.done .step-dot {
+        background: #2a7a4f;
+        border-color: #2a7a4f;
+        color: #fff;
+      }
+      .step-label {
+        margin-top: 0.45rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .payment-step-bar .step.active .step-label { color: var(--accent); }
+      .payment-step-bar .step.done .step-label { color: #2a7a4f; }
+
+      /* Empty cart state */
+      .empty-cart-state {
+        text-align: center;
+        padding: 4rem 2rem;
+      }
+      .empty-cart-state i { font-size: 3.5rem; color: var(--muted); opacity: 0.4; }
+
+      /* Order confirmation badge */
+      .order-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(42,122,79,0.12);
+        border: 1px solid rgba(42,122,79,0.3);
+        color: #1a5c35;
+        border-radius: 2rem;
+        padding: 0.35rem 1rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 1.2rem;
+      }
+      .order-badge .dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: #2a7a4f;
+        animation: pulse-dot 1.4s ease-in-out infinite;
+      }
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.7); }
+      }
+
+      /* Payment method cards */
+      .payment-method-option {
+        display: none;
+      }
+      .payment-method-option.is-visible {
+        display: block;
+      }
+
+      /* Bank transfer highlight box */
+      .bank-details-box {
+        background: rgba(230,187,99,0.10);
+        border: 1.5px solid rgba(230,187,99,0.45);
+        border-radius: 1rem;
+        padding: 1.25rem 1.5rem;
+      }
+      .bank-details-box .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid rgba(230,187,99,0.2);
+      }
+      .bank-details-box .detail-row:last-child { border-bottom: none; }
+      .bank-details-box .detail-label { color: var(--muted); font-size: 0.82rem; }
+      .bank-details-box .detail-value { font-weight: 700; font-size: 0.95rem; }
+      .copy-btn {
+        background: none;
+        border: none;
+        color: var(--accent);
+        cursor: pointer;
+        padding: 0 0.25rem;
+        font-size: 1rem;
+      }
+      .copy-btn:hover { color: var(--accent-deep); }
+
+      /* Crypto countdown */
+      .crypto-timer-box {
+        background: rgba(0,0,0,0.04);
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      #crypto-countdown {
+        font-size: 1.5rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--accent);
+      }
+      #crypto-countdown.urgent { color: #c0392b; }
+
+      /* COD info box */
+      .cod-info-box {
+        background: rgba(42,122,79,0.08);
+        border: 1px solid rgba(42,122,79,0.25);
+        border-radius: 0.75rem;
+        padding: 1rem 1.25rem;
+      }
+
+      /* Proof preview */
+      .proof-preview { margin-top: 0.5rem; }
+      .proof-preview img { max-height: 12rem; border-radius: 0.5rem; border: 1px solid var(--line); }
+
+      /* Status indicators */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.85rem;
+        border-radius: 2rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .status-badge.awaiting { background: rgba(230,187,99,0.15); color: #8a6508; }
+      .status-badge.processing { background: rgba(59,130,246,0.12); color: #1d4ed8; }
+      .status-badge.paid { background: rgba(42,122,79,0.12); color: #1a5c35; }
+      .status-badge.preparing { background: rgba(196,109,34,0.12); color: #7a3810; }
+      .status-badge.delivered { background: rgba(42,122,79,0.18); color: #134a2a; }
+
+      /* Timeline */
+      .timeline-track { position: relative; padding-left: 1.5rem; }
+      .timeline-track::before {
+        content: '';
+        position: absolute;
+        left: 0.45rem;
+        top: 0.2rem;
+        bottom: 0.2rem;
+        width: 2px;
+        background: var(--line);
+      }
+      .timeline-entry {
+        position: relative;
+        padding-bottom: 1.25rem;
+      }
+      .timeline-entry:last-child { padding-bottom: 0; }
+      .timeline-entry::before {
+        content: '';
+        position: absolute;
+        left: -1.125rem;
+        top: 0.35rem;
+        width: 0.6rem;
+        height: 0.6rem;
+        border-radius: 50%;
+        background: var(--line);
+        border: 2px solid var(--bg);
+      }
+      .timeline-entry.is-current::before {
+        background: var(--accent);
+        border-color: rgba(196,109,34,0.3);
+        width: 0.8rem;
+        height: 0.8rem;
+        left: -1.22rem;
+        top: 0.25rem;
+      }
+      .timeline-entry strong { display: block; font-size: 0.9rem; }
+      .timeline-entry .tl-detail,
+      .timeline-entry .tl-time { font-size: 0.78rem; color: var(--muted); }
+
+      /* Sticky order summary on desktop */
+      @media (min-width: 992px) {
+        .order-summary-sticky { position: sticky; top: 6rem; }
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 767px) {
+        .checkout-hero { padding: 2.5rem 0 2rem; }
+        .checkout-main { padding: 2rem 0 3.5rem; }
+        .bank-details-box .detail-row { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+        .payment-step-bar .step-label { font-size: 0.62rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-3 fixed-top nav-shell">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-3" href="index.html">
+          <span class="brand-mark">CK</span>
+          <span>
+            <span class="brand-title d-block brand-emphasis">Calaman's Kitchen</span>
+            <small class="brand-subtitle">Nigerian cuisine, plated with precision</small>
+          </span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a href="index.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i>Back to Menu
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero bar -->
+    <div class="checkout-hero">
+      <div class="container">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="index.html">Menu</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+          </ol>
+        </nav>
+        <h1 class="h2 mb-1" style="font-family:'Cormorant Garamond',serif;">Complete your order</h1>
+        <p class="mb-0" style="color:rgba(255,255,255,0.65);font-size:0.95rem;">Your selections are saved. Fill in your delivery details and choose a payment method.</p>
+      </div>
+    </div>
+
+    <main class="checkout-main">
+      <div class="container">
+
+        <!-- Empty cart guard -->
+        <div id="empty-cart-section" class="d-none">
+          <div class="empty-cart-state">
+            <i class="bi bi-cart-x"></i>
+            <h2 class="h4 mt-3 mb-2">Your cart is empty</h2>
+            <p class="text-muted mb-4">Go back to the menu and add items before checking out.</p>
+            <a href="index.html" class="btn btn-accent btn-lg rounded-pill px-5">Browse the menu</a>
+          </div>
+        </div>
+
+        <!-- Main checkout layout -->
+        <div id="checkout-section">
+
+          <!-- Step bar -->
+          <div class="payment-step-bar" id="step-bar">
+            <div class="step active" id="step-1">
+              <div class="step-dot">1</div>
+              <span class="step-label">Details</span>
+            </div>
+            <div class="step" id="step-2">
+              <div class="step-dot">2</div>
+              <span class="step-label">Payment</span>
+            </div>
+            <div class="step" id="step-3">
+              <div class="step-dot"><i class="bi bi-check2"></i></div>
+              <span class="step-label">Confirmed</span>
+            </div>
+          </div>
+
+          <div class="row g-4 align-items-start">
+            <!-- Left column: form / payment action / confirmation -->
+            <div class="col-lg-12">
+
+              <!-- STEP 1: Checkout form -->
+              <div id="form-panel" class="checkout-card p-4 p-lg-5">
+                <h2 class="mb-3">Delivery details</h2>
+                <p class="text-muted mb-4">
+                  Tell us who you are and where to deliver. You will choose your payment method and see full instructions after submission.
+                </p>
+                <form id="checkout-form" class="row g-3" novalidate>
+                  <div class="col-md-6">
+                    <label class="form-label fw-600">Full Name <span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg" name="name" placeholder="Your full name" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-600">Phone Number <span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg" name="phone" placeholder="0800 000 0000" required />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label fw-600">Delivery Address <span class="text-danger">*</span></label>
+                    <input class="form-control form-control-lg" name="address" placeholder="Street, area, city" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-600">Delivery Time</label>
+                    <select class="form-select form-select-lg" name="deliveryTime">
+                      <option>As soon as possible</option>
+                      <option>Within 1 hour</option>
+                      <option>Lunch delivery</option>
+                      <option>Dinner delivery</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-600">Payment Method</label>
+                    <select class="form-select form-select-lg" name="paymentMethod" id="payment-method-select">
+                      <option value="Bank transfer">Bank transfer</option>
+                      <option value="Crypto payment">Crypto payment</option>
+                      <option value="Payment on delivery">Payment on delivery</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label fw-600">Order Notes</label>
+                    <textarea class="form-control" rows="3" name="notes" placeholder="Soup swallow preference, extra spice, event tray notes..."></textarea>
+                  </div>
+                  <div class="col-12 pt-1">
+                    <div id="form-message" class="alert d-none mb-3" role="alert"></div>
+                    <button type="submit" id="place-order-btn" class="btn btn-accent btn-lg rounded-pill px-5 w-100">
+                      <span id="place-order-text">Place Order</span>
+                      <span id="place-order-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- STEP 2: Payment action (shown after order placed, for bank/crypto) -->
+              <div id="payment-panel" class="checkout-card p-4 p-lg-5 d-none">
+
+                <div class="order-badge">
+                  <span class="dot"></span>Order placed — awaiting payment
+                </div>
+                <h2 class="mb-1">Complete your payment</h2>
+                <p id="payment-panel-text" class="text-muted mb-4"></p>
+
+                <!-- Bank transfer method -->
+                <div id="bank-transfer-block" class="payment-method-option">
+                  <div class="bank-details-box mb-4">
+                    <div class="detail-row">
+                      <span class="detail-label">Bank name</span>
+                      <span class="detail-value">Moniepoint Microfinance Bank</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">Account name</span>
+                      <span class="detail-value">Calaman's Kitchen</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">Account number</span>
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="detail-value" id="bank-acct-display">08159462435</span>
+                        <button class="copy-btn" title="Copy account number" onclick="copyText('08159462435',this)">
+                          <i class="bi bi-copy"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">Amount to send</span>
+                      <span class="detail-value text-accent" id="bank-amount-display">—</span>
+                    </div>
+                  </div>
+                  <p class="text-muted small mb-3">
+                    Send your transfer to the account details above, then click the button below to notify the kitchen for admin confirmation.
+                  </p>
+                  <button id="bank-submit-btn" type="button" class="btn btn-accent rounded-pill px-4">
+                    I have sent my payment
+                  </button>
+                  <span id="bank-submit-msg" class="text-muted small ms-3"></span>
+                </div>
+
+                <!-- Crypto method -->
+                <div id="crypto-block" class="payment-method-option">
+                  <div class="crypto-timer-box mb-4">
+                    <i class="bi bi-clock-history fs-5 text-muted"></i>
+                    <div>
+                      <div class="small text-muted mb-0">Payment window</div>
+                      <div id="crypto-countdown">15:00</div>
+                    </div>
+                    <div class="ms-auto small text-muted">
+                      <div>Network: <strong>USDT (TRC20)</strong></div>
+                      <div id="crypto-expires-label" class="text-muted" style="font-size:0.75rem;"></div>
+                    </div>
+                  </div>
+                  <div class="bank-details-box mb-4">
+                    <div class="detail-row">
+                      <span class="detail-label">BTC wallet</span>
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="detail-value small" id="crypto-wallet-btc" style="word-break:break-all;">BTC-DEMO-WALLET-ADDRESS</span>
+                        <button class="copy-btn" title="Copy BTC wallet" onclick="copyText(document.getElementById('crypto-wallet-btc').textContent,this)">
+                          <i class="bi bi-copy"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">USDT wallet</span>
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="detail-value small" id="crypto-wallet-display" style="word-break:break-all;">TRC20-DEMO-WALLET-ADDRESS</span>
+                        <button class="copy-btn" title="Copy USDT wallet" onclick="copyText(document.getElementById('crypto-wallet-display').textContent,this)">
+                          <i class="bi bi-copy"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">ETH wallet</span>
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="detail-value small" id="crypto-wallet-eth" style="word-break:break-all;">ETH-DEMO-WALLET-ADDRESS</span>
+                        <button class="copy-btn" title="Copy ETH wallet" onclick="copyText(document.getElementById('crypto-wallet-eth').textContent,this)">
+                          <i class="bi bi-copy"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">Amount (USDT)</span>
+                      <span class="detail-value" id="crypto-amount-display">—</span>
+                    </div>
+                  </div>
+                  <p class="text-muted small mb-3">
+                    Send your crypto payment to your preferred wallet above, then click the button below for admin confirmation.
+                  </p>
+                  <button id="crypto-submit-btn" type="button" class="btn btn-accent rounded-pill px-4">
+                    I have sent my payment
+                  </button>
+                  <span id="crypto-submit-msg" class="text-muted small ms-3"></span>
+                </div>
+
+                <!-- COD method -->
+                <div id="cod-block" class="payment-method-option">
+                  <div class="cod-info-box">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <i class="bi bi-check2-circle text-success fs-5"></i>
+                      <strong>No upfront payment required</strong>
+                    </div>
+                    <p class="mb-0 text-muted small">
+                      Your order has been sent directly to the kitchen. Pay cash to the rider when your food arrives.
+                      The admin will toggle "Cash collected" once payment is received.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- STEP 3: Order tracker (shown once order is active) -->
+              <div id="tracker-panel" class="checkout-card p-4 p-lg-5 d-none">
+                <h3 class="h4 mb-1">Order progress</h3>
+                <p class="text-muted small mb-4">Updates are shown live and also rechecked every few seconds. Come back any time with your order ID.</p>
+
+                <div class="status-grid mb-4">
+                  <div class="status-tile">
+                    <span>Order ID</span>
+                    <strong id="order-id-display">—</strong>
+                  </div>
+                  <div class="status-tile">
+                    <span>Payment status</span>
+                    <strong id="payment-status-display">—</strong>
+                  </div>
+                  <div class="status-tile">
+                    <span>Kitchen status</span>
+                    <strong id="kitchen-status-display">—</strong>
+                  </div>
+                  <div class="status-tile">
+                    <span>Ready in</span>
+                    <strong id="ready-time-display">Awaiting kitchen update</strong>
+                  </div>
+                </div>
+
+                <div class="timeline-track" id="order-timeline"></div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                  <a href="/" class="btn btn-dark rounded-pill px-4">Order more items</a>
+                  <button id="new-order-btn" class="btn btn-outline-dark rounded-pill px-4">New order</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="checkout.js"></script>
+  </body>
+</html>

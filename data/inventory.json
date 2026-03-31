@@ -1,0 +1,106 @@
+{
+  "rice-1": {
+    "name": "Smoky Party Jollof Rice",
+    "available": 33
+  },
+  "rice-2": {
+    "name": "Premium Fried Rice",
+    "available": 32
+  },
+  "rice-3": {
+    "name": "Coconut Rice",
+    "available": 28
+  },
+  "rice-4": {
+    "name": "Native Rice",
+    "available": 24
+  },
+  "rice-5": {
+    "name": "Basmati Special Rice",
+    "available": 20
+  },
+  "rice-6": {
+    "name": "Designer Spaghetti",
+    "available": 32
+  },
+  "protein-1": {
+    "name": "Peppered Chicken",
+    "available": 30
+  },
+  "protein-2": {
+    "name": "Turkey Wings",
+    "available": 24
+  },
+  "protein-3": {
+    "name": "Beef",
+    "available": 40
+  },
+  "protein-4": {
+    "name": "Goat Meat",
+    "available": 18
+  },
+  "protein-5": {
+    "name": "Assorted Meat",
+    "available": 20
+  },
+  "protein-6": {
+    "name": "Catfish",
+    "available": 16
+  },
+  "protein-7": {
+    "name": "Croaker Fish",
+    "available": 14
+  },
+  "protein-8": {
+    "name": "Grilled Prawn",
+    "available": 12
+  },
+  "protein-9": {
+    "name": "Boiled Egg",
+    "available": 50
+  },
+  "protein-10": {
+    "name": "Snail",
+    "available": 10
+  },
+  "soup-1": {
+    "name": "Egusi Soup",
+    "available": 26
+  },
+  "soup-2": {
+    "name": "Afang Soup",
+    "available": 18
+  },
+  "soup-3": {
+    "name": "Ogbono Soup",
+    "available": 24
+  },
+  "soup-4": {
+    "name": "Vegetable Soup",
+    "available": 24
+  },
+  "soup-5": {
+    "name": "Bitterleaf Soup",
+    "available": 15
+  },
+  "soup-6": {
+    "name": "Okra Soup",
+    "available": 24
+  },
+  "swallow-1": {
+    "name": "Garri",
+    "available": 33
+  },
+  "swallow-2": {
+    "name": "Semovita",
+    "available": 28
+  },
+  "swallow-3": {
+    "name": "Loi-loi",
+    "available": 20
+  },
+  "swallow-4": {
+    "name": "Poundo Yam",
+    "available": 21
+  }
+}

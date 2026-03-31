@@ -1,0 +1,8 @@
+node_modules/
+data/orders.json
+public/assets/uploads/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
