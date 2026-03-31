@@ -30,6 +30,14 @@
       .status-shell { max-width: 900px; margin: 0 auto; }
       .empty-order-state { text-align: center; padding: 4rem 2rem; }
       .empty-order-state i { font-size: 3.25rem; color: var(--muted); opacity: 0.45; }
+      @media (max-width: 767px) {
+        .status-grid {
+          grid-template-columns: 1fr;
+        }
+        .status-tile {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>

@@ -456,7 +456,7 @@ async function submitPaymentEvidence(type) {
     activeOrder = data.order;
     sessionStorage.setItem(ACTIVE_ORDER_KEY, activeOrderId);
     sessionStorage.setItem('ck-last-order-id', activeOrderId);
-    window.location.href = 'order-status.html';
+    window.location.replace('order-status.html');
   } catch (err) {
     msgEl.textContent = err.message || 'Failed to submit.';
   } finally {
