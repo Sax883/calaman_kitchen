@@ -2,38 +2,40 @@ const CART_KEY = 'calamans-kitchen-cart';
 
 const FALLBACK_MENU_SECTIONS = {
   rice: [
-    { id: 'rice-1', name: 'Smoky Party Jollof Rice', price: 4500, image: 'assets/smoky-party-jollof-rice.jpeg', description: 'Classic red party jollof with deep pepper body and a rich, smoky finish.', available: 1 },
-    { id: 'rice-2', name: 'Premium Fried Rice', price: 4800, image: 'assets/premium-fried-rice.jpeg', description: 'Colorful fried rice prepared with vegetables and clean savory seasoning.', available: 1 },
-    { id: 'rice-3', name: 'Coconut Rice', price: 5000, image: 'assets/coconut-rice.jpeg', description: 'Soft coconut-infused rice with balanced sweetness and a polished finish.', available: 1 },
-    { id: 'rice-4', name: 'Native Rice', price: 5200, image: 'assets/native-rice.jpeg', description: 'Traditional native rice packed with local spices and bold kitchen aroma.', available: 1 },
-    { id: 'rice-5', name: 'Basmati Special Rice', price: 5500, image: 'assets/basmati-special-rice.jpeg', description: 'Long-grain basmati rice dressed for premium events and executive trays.', available: 1 },
-    { id: 'rice-6', name: 'Designer Spaghetti', price: 4300, image: 'assets/designer-spaghetti.jpeg', description: 'Tomato-rich spaghetti prepared with vegetables and a vibrant presentation.', available: 1 }
+    { id: 'rice-1', name: 'Party Jollof Rice', price: 5000, image: 'assets/smoky-party-jollof-rice.jpeg', description: 'Classic party-style jollof rice with rich pepper flavor and signature smoky finish.', available: 1 },
+    { id: 'rice-2', name: 'Fried Rice', price: 5000, image: 'assets/premium-fried-rice.jpeg', description: 'Freshly prepared fried rice with vegetables and balanced savory seasoning.', available: 1 },
+    { id: 'rice-3', name: 'Coconut Rice', price: 5000, image: 'assets/coconut-rice.jpeg', description: 'Aromatic coconut rice with a smooth finish and premium home-style taste.', available: 1 }
   ],
   proteins: [
-    { id: 'protein-1', name: 'Peppered Chicken', price: 3200, image: 'assets/peppered-chicken.jpeg', description: 'Spicy, glossy chicken cuts finished for rice trays and events.', available: 1 },
-    { id: 'protein-2', name: 'Turkey Wings', price: 3800, image: 'assets/turkey-wings.jpeg', description: 'Well-marinated turkey wings with bold pepper glaze.', available: 1 },
-    { id: 'protein-3', name: 'Beef', price: 2200, image: 'assets/beef.jpeg', description: 'Tender beef portion simmered until flavorful and soft.', available: 1 },
-    { id: 'protein-4', name: 'Goat Meat', price: 3500, image: 'assets/goat-meat.jpeg', description: 'Goat meat cuts suited for soup and premium local pairings.', available: 1 },
-    { id: 'protein-5', name: 'Assorted Meat', price: 3000, image: 'assets/assorted-meat.jpeg', description: 'Popular assorted meat mix prepared with bold seasoning.', available: 1 },
-    { id: 'protein-6', name: 'Catfish', price: 4000, image: 'assets/catfish.jpeg', description: 'Fresh catfish portion ideal for soup lovers and seafood fans.', available: 1 },
-    { id: 'protein-7', name: 'Croaker Fish', price: 4200, image: 'assets/croaker-fish.jpeg', description: 'Rich croaker fish option with deep savory taste.', available: 1 },
-    { id: 'protein-8', name: 'Grilled Prawn', price: 4800, image: 'assets/grilled-prawn.jpeg', description: 'Premium prawn selection for elevated trays and special orders.', available: 1 },
-    { id: 'protein-9', name: 'Boiled Egg', price: 800, image: 'assets/boiled-egg.jpeg', description: 'Simple add-on for rice and spaghetti plates.', available: 1 },
-    { id: 'protein-10', name: 'Snail', price: 5000, image: 'assets/snail.jpeg', description: 'Premium snail option for customers who want a luxury local touch.', available: 1 }
+    { id: 'protein-1', name: 'Chicken', price: 5000, image: 'assets/peppered-chicken.jpeg', description: 'Well-seasoned chicken portion, finished for rice and soup pairings.', available: 1 },
+    { id: 'protein-2', name: 'Turkey', price: 12000, image: 'assets/turkey-wings.jpeg', description: 'Premium turkey portion marinated and cooked for full flavor.', available: 1 },
+    { id: 'protein-3', name: 'Beef', price: 3500, image: 'assets/beef.jpeg', description: 'Tender beef cuts simmered to a rich and satisfying finish.', available: 1 },
+    { id: 'protein-4', name: 'Snail', price: 6000, image: 'assets/snail.jpeg', description: 'Premium snail portion prepared for specialty local meals.', available: 1 },
+    { id: 'protein-5', name: 'Isi Ewu (Special Order)', price: 25000, image: 'assets/assorted-meat.jpeg', description: 'Special order: classic isi ewu served with bold traditional seasoning.', available: 1 },
+    { id: 'protein-6', name: 'Nkwobi (Special Order)', price: 30000, image: 'assets/goat-meat.jpeg', description: 'Special order: rich nkwobi presentation made fresh to order.', available: 1 },
+    { id: 'protein-7', name: 'Assorted Pepper Soup (Special Order)', price: 20000, image: 'assets/assorted-meat.jpeg', description: 'Special order: assorted pepper soup cooked with aromatic local spices.', available: 1 },
+    { id: 'protein-8', name: 'Catfish Pepper Soup and Yam (Special Order)', price: 25000, image: 'assets/catfish.jpeg', description: 'Special order: catfish pepper soup served with yam.', available: 1 },
+    { id: 'protein-9', name: 'Catfish Pepper Soup and Rice (Special Order)', price: 20000, image: 'assets/catfish.jpeg', description: 'Special order: catfish pepper soup served with rice.', available: 1 },
+    { id: 'protein-10', name: 'Croaker Fish Pepper Soup (Special Order)', price: 30000, image: 'assets/croaker-fish.jpeg', description: 'Special order: premium croaker fish pepper soup.', available: 1 },
+    { id: 'protein-11', name: 'Native Rice (Special Order)', price: 7000, image: 'assets/native-rice.jpeg', description: 'Special order: native rice prepared with traditional spices.', available: 1 },
+    { id: 'protein-12', name: 'Spaghetti (Special Order)', price: 4000, image: 'assets/designer-spaghetti.jpeg', description: 'Special order: tomato-rich spaghetti prepared to request.', available: 1 },
+    { id: 'protein-13', name: 'Seafood Okra with Garri or Semo (Special Order)', price: 26500, image: 'assets/okra-soup.jpeg', description: 'Special order: seafood okra served with garri or semo.', available: 1 }
   ],
   soups: [
-    { id: 'soup-1', name: 'Egusi Soup', price: 4200, image: 'assets/egusi-soup.jpeg', description: 'Melon-seed soup with rich body and satisfying depth.', available: 1 },
-    { id: 'soup-2', name: 'Afang Soup', price: 4500, image: 'assets/afang-soup.jpeg', description: 'Leafy soup with strong traditional flavor and comforting texture.', available: 1 },
-    { id: 'soup-3', name: 'Ogbono Soup', price: 4300, image: 'assets/ogbono-soup.jpeg', description: 'Smooth ogbono soup with a glossy finish and hearty taste.', available: 1 },
-    { id: 'soup-4', name: 'Vegetable Soup', price: 4000, image: 'assets/vegetable-soup.jpeg', description: 'A vibrant vegetable soup with freshness and balanced richness.', available: 1 },
-    { id: 'soup-5', name: 'Bitterleaf Soup', price: 4600, image: 'assets/bitterleaf-soup.jpeg', description: 'Traditional bitterleaf soup prepared for bold local palates.', available: 1 },
-    { id: 'soup-6', name: 'Okra Soup', price: 3900, image: 'assets/okra-soup.jpeg', description: 'Soft okra soup with a light draw and satisfying aroma.', available: 1 }
+    { id: 'soup-1', name: 'Egusi Soup and Meat', price: 9000, image: 'assets/egusi-soup.jpeg', description: 'Premium egusi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-2', name: 'Banga Soup and Meat', price: 20000, image: 'assets/afang-soup.jpeg', description: 'Rich banga soup and meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-3', name: 'Fisherman Soup with Fish', price: 25000, image: 'assets/ogbono-soup.jpeg', description: 'Seafood-rich fisherman soup with fish. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-4', name: 'Vegetable Soup and Meat', price: 9000, image: 'assets/vegetable-soup.jpeg', description: 'Fresh vegetable soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-5', name: 'Okazi Soup and Meat', price: 9000, image: 'assets/afang-soup.jpeg', description: 'Traditional okazi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-6', name: 'Bitter Leaf Soup and Meat', price: 9000, image: 'assets/bitterleaf-soup.jpeg', description: 'Authentic bitter leaf soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-7', name: 'Okoro Soup and Meat', price: 9000, image: 'assets/okra-soup.jpeg', description: 'Home-style okoro soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-8', name: 'Ogbono Soup and Meat', price: 9000, image: 'assets/ogbono-soup.jpeg', description: 'Smooth ogbono soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-9', name: 'White Soup', price: 15500, image: 'assets/egusi-soup.jpeg', description: 'Premium white soup. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-10', name: 'Native Soup and Meat', price: 9000, image: 'assets/afang-soup.jpeg', description: 'Native soup served with meat. Add garri or semo for NGN 1,500.', available: 1 }
   ],
   swallow: [
-    { id: 'swallow-1', name: 'Garri', price: 1200, image: 'assets/garri.jpeg', description: 'Classic eba option with smooth finish, ideal for egusi, ogbono, and vegetable soups.', available: 1 },
-    { id: 'swallow-2', name: 'Semovita', price: 1400, image: 'assets/semovita.jpeg', description: 'Soft and stretchy semovita prepared for customers who prefer a lighter, refined swallow texture.', available: 1 },
-    { id: 'swallow-3', name: 'Loi-loi', price: 1500, image: 'assets/loi-loi.jpeg', description: 'Traditional loi-loi option with rich local character for authentic meal combinations.', available: 1 },
-    { id: 'swallow-4', name: 'Poundo Yam', price: 1800, image: 'assets/poundo-yam.jpeg', description: 'Premium poundo yam option with satisfying body, perfect for bitterleaf, afang, and okra soup plates.', available: 1 }
+    { id: 'swallow-1', name: 'Garri', price: 1500, image: 'assets/garri.jpeg', description: 'Freshly prepared eba to pair with soup selections.', available: 1 },
+    { id: 'swallow-2', name: 'Semo', price: 1500, image: 'assets/semovita.jpeg', description: 'Soft semo swallow, ideal with traditional soup options.', available: 1 }
   ]
 };
 
@@ -48,6 +50,7 @@ const cart = [];
 
 const riceGrid = document.getElementById('rice-grid');
 const proteinGrid = document.getElementById('protein-grid');
+const specialGrid = document.getElementById('special-grid');
 const soupGrid = document.getElementById('soup-grid');
 const swallowGrid = document.getElementById('swallow-grid');
 const cartItems = document.getElementById('cart-items');
@@ -161,8 +164,12 @@ function renderCart() {
 }
 
 function renderMenu() {
+  const regularProteins = menuSections.proteins.filter((item) => !String(item.name || '').includes('(Special Order)'));
+  const specialOrders = menuSections.proteins.filter((item) => String(item.name || '').includes('(Special Order)'));
+
   renderCards(menuSections.rice, riceGrid, true);
-  renderCards(menuSections.proteins, proteinGrid, false);
+  renderCards(regularProteins, proteinGrid, false);
+  renderCards(specialOrders, specialGrid, true);
   renderCards(menuSections.soups, soupGrid, true);
   renderCards(menuSections.swallow, swallowGrid, true);
 }

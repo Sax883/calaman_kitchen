@@ -42,17 +42,22 @@
       <div class="container">
         <div class="menu-only-header text-center">
           <h1 class="display-5 mb-2">Food Menu</h1>
-          <p class="text-muted mb-0">Select dishes only. Add to cart, then click Place Order to continue to checkout details.</p>
+          <p class="text-muted mb-0">Explore our updated soups, rice options, proteins, and special orders. Add your picks to cart, then continue to checkout.</p>
         </div>
 
         <section class="mb-5">
-          <h2 class="menu-section-title mb-3">Rice varieties and spaghetti</h2>
+          <h2 class="menu-section-title mb-3">Rice and Pasta</h2>
           <div id="rice-grid" class="row g-4"></div>
         </section>
 
         <section class="mb-5">
           <h2 class="menu-section-title mb-3">Proteins</h2>
           <div id="protein-grid" class="row g-4"></div>
+        </section>
+
+        <section class="mb-5">
+          <h2 class="menu-section-title mb-3">Special Orders</h2>
+          <div id="special-grid" class="row g-4"></div>
         </section>
 
         <section class="mb-5">
@@ -72,5 +77,21 @@
     </main>
 
     <script src="menu.js"></script>
+    <script type="text/javascript">
+      var _smartsupp = _smartsupp || {};
+      _smartsupp.key = '208a9cc9d8927c06b9a004b9f9a203e2920aa52a';
+      window.smartsupp || (function(d) {
+        var s, c, o = smartsupp = function() { o._.push(arguments); };
+        o._ = [];
+        s = d.getElementsByTagName('script')[0];
+        c = d.createElement('script');
+        c.type = 'text/javascript';
+        c.charset = 'utf-8';
+        c.async = true;
+        c.src = 'https://www.smartsuppchat.com/loader.js?';
+        s.parentNode.insertBefore(c, s);
+      })(document);
+    </script>
+    <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener noreferrer">Smartsupp</a></noscript>
   </body>
 </html>

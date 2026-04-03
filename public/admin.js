@@ -1,5 +1,28 @@
 const ADMIN_TOKEN_KEY = 'calamans-kitchen-admin-token';
 
+function resolveApiBase() {
+  const host = String(window.location.hostname || '').toLowerCase();
+  const isLocalHost = host === 'localhost' || host === '127.0.0.1';
+  const isLanIp = /^\d{1,3}(\.\d{1,3}){3}$/.test(host);
+  const shouldUseDedicatedApiPort = window.location.port && window.location.port !== '3000';
+
+  if (window.location.protocol === 'file:') {
+    return 'http://localhost:3000';
+  }
+
+  if ((isLocalHost || isLanIp) && shouldUseDedicatedApiPort) {
+    return `${window.location.protocol}//${window.location.hostname}:3000`;
+  }
+
+  return '';
+}
+
+const API_BASE = resolveApiBase();
+
+function apiUrl(path) {
+  return `${API_BASE}${path}`;
+}
+
 const adminLoginShell = document.getElementById('admin-login-shell');
 const adminDashboardShell = document.getElementById('admin-dashboard-shell');
 const adminLoginForm = document.getElementById('admin-login-form');
@@ -31,6 +54,13 @@ let alertSettings = {
   soundEnabled: true,
   vibrationEnabled: true
 };
+let knownOrderIds = new Set();
+let seenLiveOrderIds = new Set();
+let hasLoadedOrdersOnce = false;
+
+function rememberOrders(orders) {
+  knownOrderIds = new Set((orders || []).map((order) => order.id));
+}
 
 function loadAlertSettings() {
   try {
@@ -384,7 +414,7 @@ function showSessionExpired() {
 
 async function loadOrders() {
   try {
-    const response = await fetch('/api/orders', {
+    const response = await fetch(apiUrl('/api/orders'), {
       headers: authHeaders()
     });
 
@@ -394,7 +424,20 @@ async function loadOrders() {
     }
 
     const result = await readJsonResponse(response);
-    renderOrders(result.orders || []);
+    const orders = result.orders || [];
+    const previousOrderIds = new Set(knownOrderIds);
+
+    renderOrders(orders);
+    rememberOrders(orders);
+
+    if (hasLoadedOrdersOnce) {
+      const missedRealtimeOrders = orders.filter((order) => !previousOrderIds.has(order.id));
+      for (const order of missedRealtimeOrders) {
+        triggerBrowserNotice(order);
+      }
+    }
+
+    hasLoadedOrdersOnce = true;
     adminMessage.className = 'alert alert-success border-0';
     adminMessage.textContent = 'Dashboard connected. Orders update automatically.';
   } catch (_) {
@@ -405,7 +448,7 @@ async function loadOrders() {
 
 async function loadMenuEditor() {
   try {
-    const response = await fetch('/api/menu', {
+    const response = await fetch(apiUrl('/api/menu'), {
       headers: authHeaders()
     });
     const result = await readJsonResponse(response);
@@ -422,6 +465,11 @@ async function loadMenuEditor() {
 }
 
 function triggerBrowserNotice(order) {
+  if (!order || !order.id || seenLiveOrderIds.has(order.id)) {
+    return;
+  }
+
+  seenLiveOrderIds.add(order.id);
   notificationStatus.textContent = 'New order received';
   liveBadge.textContent = 'Live: new order';
   liveBadge.className = 'badge text-bg-danger fs-6 px-3 py-2 rounded-pill';
@@ -589,7 +637,7 @@ async function sendAdminAction(orderId, action) {
   const readyTimeInput = document.querySelector(`.ready-time-input[data-id="${orderId}"]`);
   const readyInMinutes = readyTimeInput ? readyTimeInput.value : '';
 
-  const response = await fetch(`/api/admin/orders/${encodeURIComponent(orderId)}`, {
+  const response = await fetch(apiUrl(`/api/admin/orders/${encodeURIComponent(orderId)}`), {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -627,7 +675,7 @@ async function saveMenuItem(itemId, overrides = {}) {
     ...overrides
   };
 
-  const response = await fetch(`/api/admin/menu/${encodeURIComponent(itemId)}`, {
+  const response = await fetch(apiUrl(`/api/admin/menu/${encodeURIComponent(itemId)}`), {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -652,7 +700,7 @@ async function saveMenuItem(itemId, overrides = {}) {
 
 async function uploadMenuImage(itemId, file) {
   const dataUrl = await fileToDataUrl(file);
-  const response = await fetch(`/api/admin/menu/${encodeURIComponent(itemId)}/image`, {
+  const response = await fetch(apiUrl(`/api/admin/menu/${encodeURIComponent(itemId)}/image`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -698,7 +746,7 @@ function connectStream() {
     return;
   }
 
-  adminSocket = io({
+  adminSocket = io(API_BASE || undefined, {
     transports: ['websocket', 'polling']
   });
 
@@ -765,6 +813,9 @@ function clearSession() {
 }
 
 async function initializeDashboard() {
+  knownOrderIds.clear();
+  seenLiveOrderIds.clear();
+  hasLoadedOrdersOnce = false;
   setDashboardVisible(true);
   await loadOrders();
   await loadMenuEditor();
@@ -782,7 +833,7 @@ adminLoginForm.addEventListener('submit', async (event) => {
   };
 
   try {
-    const response = await fetch('/api/admin/login', {
+    const response = await fetch(apiUrl('/api/admin/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

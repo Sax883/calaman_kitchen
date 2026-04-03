@@ -1,106 +1,114 @@
 {
   "rice-1": {
-    "name": "Smoky Party Jollof Rice",
-    "available": 33
+    "name": "Party Jollof Rice",
+    "available": 35
   },
   "rice-2": {
-    "name": "Premium Fried Rice",
+    "name": "Fried Rice",
     "available": 32
   },
   "rice-3": {
     "name": "Coconut Rice",
-    "available": 28
-  },
-  "rice-4": {
-    "name": "Native Rice",
-    "available": 24
-  },
-  "rice-5": {
-    "name": "Basmati Special Rice",
-    "available": 20
-  },
-  "rice-6": {
-    "name": "Designer Spaghetti",
-    "available": 32
+    "available": 30
   },
   "protein-1": {
-    "name": "Peppered Chicken",
+    "name": "Chicken",
     "available": 30
   },
   "protein-2": {
-    "name": "Turkey Wings",
-    "available": 24
+    "name": "Turkey",
+    "available": 20
   },
   "protein-3": {
     "name": "Beef",
     "available": 40
   },
   "protein-4": {
-    "name": "Goat Meat",
-    "available": 18
+    "name": "Snail",
+    "available": 15
   },
   "protein-5": {
-    "name": "Assorted Meat",
-    "available": 20
+    "name": "Isi Ewu (Special Order)",
+    "available": 8
   },
   "protein-6": {
-    "name": "Catfish",
-    "available": 16
+    "name": "Nkwobi (Special Order)",
+    "available": 8
   },
   "protein-7": {
-    "name": "Croaker Fish",
-    "available": 14
-  },
-  "protein-8": {
-    "name": "Grilled Prawn",
-    "available": 12
-  },
-  "protein-9": {
-    "name": "Boiled Egg",
-    "available": 50
-  },
-  "protein-10": {
-    "name": "Snail",
+    "name": "Assorted Pepper Soup (Special Order)",
     "available": 10
   },
+  "protein-8": {
+    "name": "Catfish Pepper Soup and Yam (Special Order)",
+    "available": 10
+  },
+  "protein-9": {
+    "name": "Catfish Pepper Soup and Rice (Special Order)",
+    "available": 10
+  },
+  "protein-10": {
+    "name": "Croaker Fish Pepper Soup (Special Order)",
+    "available": 8
+  },
+  "protein-11": {
+    "name": "Native Rice (Special Order)",
+    "available": 16
+  },
+  "protein-12": {
+    "name": "Spaghetti (Special Order)",
+    "available": 20
+  },
+  "protein-13": {
+    "name": "Seafood Okra with Garri or Semo (Special Order)",
+    "available": 12
+  },
   "soup-1": {
-    "name": "Egusi Soup",
+    "name": "Egusi Soup and Meat",
     "available": 26
   },
   "soup-2": {
-    "name": "Afang Soup",
+    "name": "Banga Soup and Meat",
     "available": 18
   },
   "soup-3": {
-    "name": "Ogbono Soup",
-    "available": 24
+    "name": "Fisherman Soup with Fish",
+    "available": 14
   },
   "soup-4": {
-    "name": "Vegetable Soup",
+    "name": "Vegetable Soup and Meat",
     "available": 24
   },
   "soup-5": {
-    "name": "Bitterleaf Soup",
-    "available": 15
+    "name": "Okazi Soup and Meat",
+    "available": 18
   },
   "soup-6": {
-    "name": "Okra Soup",
-    "available": 24
+    "name": "Bitter Leaf Soup and Meat",
+    "available": 18
+  },
+  "soup-7": {
+    "name": "Okoro Soup and Meat",
+    "available": 20
+  },
+  "soup-8": {
+    "name": "Ogbono Soup and Meat",
+    "available": 22
+  },
+  "soup-9": {
+    "name": "White Soup",
+    "available": 16
+  },
+  "soup-10": {
+    "name": "Native Soup and Meat",
+    "available": 18
   },
   "swallow-1": {
     "name": "Garri",
     "available": 33
   },
   "swallow-2": {
-    "name": "Semovita",
-    "available": 28
-  },
-  "swallow-3": {
-    "name": "Loi-loi",
-    "available": 20
-  },
-  "swallow-4": {
-    "name": "Poundo Yam",
-    "available": 21
+    "name": "Semo",
+    "available": 29
   }
 }

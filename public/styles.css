@@ -35,6 +35,31 @@ h3,
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.nav-checkout-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+  .nav-shell .navbar-collapse {
+    display: flex !important;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .nav-shell .navbar-nav {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    column-gap: 0.35rem;
+    row-gap: 0.2rem;
+  }
+
+  .nav-shell .navbar-nav .nav-link {
+    font-size: 0.94rem;
+  }
+}
+
 .brand-mark {
   display: grid;
   place-items: center;
@@ -858,6 +883,14 @@ h3,
     gap: 0.75rem;
   }
 
+  .section-space {
+    padding: 5rem 0;
+  }
+
+  .section-heading {
+    margin-bottom: 2.25rem;
+  }
+
   .hero-title {
     max-width: none;
     font-size: 1.25rem;
@@ -871,9 +904,25 @@ h3,
     position: static;
     top: auto;
   }
+
+  .admin-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .menu-editor-toolbar {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 @media (max-width: 767.98px) {
+  .brand-mark {
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 0.92rem;
+  }
+
   .brand-title {
     font-size: 1.3rem;
   }
@@ -899,6 +948,12 @@ h3,
     padding: 1.1rem;
   }
 
+  .service-tile,
+  .order-card,
+  .login-card {
+    padding: 1.15rem;
+  }
+
   .price-tag {
     font-size: 1rem;
   }
@@ -910,6 +965,12 @@ h3,
 
   .review-card {
     padding: 1.2rem;
+  }
+
+  .admin-order-toast-stack {
+    right: 0.75rem;
+    left: 0.75rem;
+    max-width: none;
   }
 
   .contact-shell {
@@ -931,6 +992,11 @@ h3,
 }
 
 @media (max-width: 575.98px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .section-space {
     padding: 4.5rem 0;
   }
@@ -952,6 +1018,16 @@ h3,
 
   .menu-card img {
     height: 12rem;
+  }
+
+  .metric-card {
+    padding: 1rem 0.85rem;
+  }
+
+  .btn-lg {
+    --bs-btn-padding-y: 0.62rem;
+    --bs-btn-padding-x: 1.1rem;
+    --bs-btn-font-size: 1rem;
   }
 
   .professional-eyebrow {

@@ -2,7 +2,24 @@
 
 const ACTIVE_ORDER_KEY = 'ck-active-order-id';
 const LAST_ORDER_KEY = 'ck-last-order-id';
-const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
+function resolveApiBase() {
+  const host = String(window.location.hostname || '').toLowerCase();
+  const isLocalHost = host === 'localhost' || host === '127.0.0.1';
+  const isLanIp = /^\d{1,3}(\.\d{1,3}){3}$/.test(host);
+  const shouldUseDedicatedApiPort = window.location.port && window.location.port !== '3000';
+
+  if (window.location.protocol === 'file:') {
+    return 'http://localhost:3000';
+  }
+
+  if ((isLocalHost || isLanIp) && shouldUseDedicatedApiPort) {
+    return `${window.location.protocol}//${window.location.hostname}:3000`;
+  }
+
+  return '';
+}
+
+const API_BASE = resolveApiBase();
 
 function apiUrl(path) {
   return `${API_BASE}${path}`;

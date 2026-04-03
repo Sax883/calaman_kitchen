@@ -45,11 +45,13 @@
             <li class="nav-item"><a class="nav-link" href="#certification">Certification</a></li>
             <li class="nav-item"><a class="nav-link" href="#rice">Food Variety</a></li>
             <li class="nav-item"><a class="nav-link" href="#proteins">Proteins</a></li>
+            <li class="nav-item"><a class="nav-link" href="#special-orders">Special Orders</a></li>
             <li class="nav-item"><a class="nav-link" href="#soups">Soups</a></li>
             <li class="nav-item"><a class="nav-link" href="#swallow">Swallow</a></li>
             <li class="nav-item"><a class="nav-link" href="#reviews">Reviews</a></li>
-            <li class="nav-item" id="checkout-nav-link"><a class="nav-link btn btn-accent text-white rounded-pill px-3 ms-1" href="checkout.html">Checkout</a></li>
+            <li class="nav-item d-lg-none" id="checkout-nav-link-mobile"><a class="nav-link btn btn-accent text-white rounded-pill px-3" href="checkout.html">Checkout</a></li>
           </ul>
+          <a class="btn btn-accent text-white rounded-pill px-3 ms-lg-3 d-none d-lg-inline-flex nav-checkout-btn" href="checkout.html">Checkout</a>
         </div>
       </div>
     </nav>
@@ -261,10 +263,24 @@
         <div class="container">
           <div class="section-heading text-center mx-auto text-white">
             <span class="eyebrow professional-eyebrow emphasis-label">Proteins section</span>
-              <h2 class="menu-section-title">Ten protein options for every plate size and budget.</h2>
-            <p>Mix rice and soup orders with a full protein list that covers everyday favorites and premium add-ons.</p>
+              <h2 class="menu-section-title">Protein add-ons for complete meals.</h2>
+            <p>Choose from our regular daily protein options to pair with rice and soups.</p>
           </div>
           <div id="protein-grid" class="row g-4"></div>
+        </div>
+      </section>
+
+      <section id="special-orders" class="section-space">
+        <div class="container">
+          <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+            <div>
+              <span class="eyebrow text-dark professional-eyebrow emphasis-label">Special orders</span>
+              <h2 class="mb-2 menu-section-title">Premium dishes prepared on request</h2>
+              <p class="text-muted mb-0">Explore our signature special-order meals including pepper soups and traditional delicacies.</p>
+            </div>
+            <div class="mini-note">Special orders are available based on current kitchen capacity.</div>
+          </div>
+          <div id="special-grid" class="row g-4"></div>
         </div>
       </section>
 
@@ -482,5 +498,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
+    <script type="text/javascript">
+      var _smartsupp = _smartsupp || {};
+      _smartsupp.key = '208a9cc9d8927c06b9a004b9f9a203e2920aa52a';
+      window.smartsupp || (function(d) {
+        var s, c, o = smartsupp = function() { o._.push(arguments); };
+        o._ = [];
+        s = d.getElementsByTagName('script')[0];
+        c = d.createElement('script');
+        c.type = 'text/javascript';
+        c.charset = 'utf-8';
+        c.async = true;
+        c.src = 'https://www.smartsuppchat.com/loader.js?';
+        s.parentNode.insertBefore(c, s);
+      })(document);
+    </script>
+    <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank" rel="noopener noreferrer">Smartsupp</a></noscript>
   </body>
 </html>

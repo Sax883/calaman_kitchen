@@ -1,184 +1,198 @@
 {
   "rice-1": {
     "category": "rice",
-    "name": "Smoky Party Jollof Rice",
-    "price": 4500,
+    "name": "Party Jollof Rice",
+    "price": 5000,
     "image": "assets/smoky-party-jollof-rice.jpeg",
-    "description": "Classic red party jollof with deep pepper body and a rich, smoky finish."
+    "description": "Classic party-style jollof rice with rich pepper flavor and signature smoky finish."
   },
   "rice-2": {
     "category": "rice",
-    "name": "Premium Fried Rice",
-    "price": 4800,
+    "name": "Fried Rice",
+    "price": 5000,
     "image": "assets/premium-fried-rice.jpeg",
-    "description": "Colorful fried rice prepared with vegetables and clean savory seasoning."
+    "description": "Freshly prepared fried rice with vegetables and balanced savory seasoning."
   },
   "rice-3": {
     "category": "rice",
     "name": "Coconut Rice",
     "price": 5000,
     "image": "assets/coconut-rice.jpeg",
-    "description": "Soft coconut-infused rice with balanced sweetness and a polished finish."
-  },
-  "rice-4": {
-    "category": "rice",
-    "name": "Native Rice",
-    "price": 5200,
-    "image": "assets/native-rice.jpeg",
-    "description": "Traditional native rice packed with local spices and bold kitchen aroma."
-  },
-  "rice-5": {
-    "category": "rice",
-    "name": "Basmati Special Rice",
-    "price": 5500,
-    "image": "assets/basmati-special-rice.jpeg",
-    "description": "Long-grain basmati rice dressed for premium events and executive trays."
-  },
-  "rice-6": {
-    "category": "rice",
-    "name": "Designer Spaghetti",
-    "price": 4300,
-    "image": "assets/designer-spaghetti.jpeg",
-    "description": "Tomato-rich spaghetti prepared with vegetables and a vibrant presentation."
+    "description": "Aromatic coconut rice with a smooth finish and premium home-style taste."
   },
   "protein-1": {
     "category": "proteins",
-    "name": "Peppered Chicken",
-    "price": 3200,
+    "name": "Chicken",
+    "price": 5000,
     "image": "assets/peppered-chicken.jpeg",
-    "description": "Spicy, glossy chicken cuts finished for rice trays and events."
+    "description": "Well-seasoned chicken portion, finished for rice and soup pairings."
   },
   "protein-2": {
     "category": "proteins",
-    "name": "Turkey Wings",
-    "price": 3800,
+    "name": "Turkey",
+    "price": 12000,
     "image": "assets/turkey-wings.jpeg",
-    "description": "Well-marinated turkey wings with bold pepper glaze."
+    "description": "Premium turkey portion marinated and cooked for full flavor."
   },
   "protein-3": {
     "category": "proteins",
     "name": "Beef",
-    "price": 2200,
+    "price": 3500,
     "image": "assets/beef.jpeg",
-    "description": "Tender beef portion simmered until flavorful and soft."
+    "description": "Tender beef cuts simmered to a rich and satisfying finish."
   },
   "protein-4": {
     "category": "proteins",
-    "name": "Goat Meat",
-    "price": 3500,
-    "image": "assets/goat-meat.jpeg",
-    "description": "Goat meat cuts suited for soup and premium local pairings."
+    "name": "Snail",
+    "price": 6000,
+    "image": "assets/snail.jpeg",
+    "description": "Premium snail portion prepared for specialty local meals."
   },
   "protein-5": {
     "category": "proteins",
-    "name": "Assorted Meat",
-    "price": 3000,
+    "name": "Isi Ewu (Special Order)",
+    "price": 25000,
     "image": "assets/assorted-meat.jpeg",
-    "description": "Popular assorted meat mix prepared with bold seasoning."
+    "description": "Special order: classic isi ewu served with bold traditional seasoning."
   },
   "protein-6": {
     "category": "proteins",
-    "name": "Catfish",
-    "price": 4000,
-    "image": "assets/catfish.jpeg",
-    "description": "Fresh catfish portion ideal for soup lovers and seafood fans."
+    "name": "Nkwobi (Special Order)",
+    "price": 30000,
+    "image": "assets/goat-meat.jpeg",
+    "description": "Special order: rich nkwobi presentation made fresh to order."
   },
   "protein-7": {
     "category": "proteins",
-    "name": "Croaker Fish",
-    "price": 4200,
-    "image": "assets/croaker-fish.jpeg",
-    "description": "Rich croaker fish option with deep savory taste."
+    "name": "Assorted Pepper Soup (Special Order)",
+    "price": 20000,
+    "image": "assets/assorted-meat.jpeg",
+    "description": "Special order: assorted pepper soup cooked with aromatic local spices."
   },
   "protein-8": {
     "category": "proteins",
-    "name": "Grilled Prawn",
-    "price": 4800,
-    "image": "assets/grilled-prawn.jpeg",
-    "description": "Premium prawn selection for elevated trays and special orders."
+    "name": "Catfish Pepper Soup and Yam (Special Order)",
+    "price": 25000,
+    "image": "assets/catfish.jpeg",
+    "description": "Special order: catfish pepper soup served with yam."
   },
   "protein-9": {
     "category": "proteins",
-    "name": "Boiled Egg",
-    "price": 800,
-    "image": "assets/boiled-egg.jpeg",
-    "description": "Simple add-on for rice and spaghetti plates."
+    "name": "Catfish Pepper Soup and Rice (Special Order)",
+    "price": 20000,
+    "image": "assets/catfish.jpeg",
+    "description": "Special order: catfish pepper soup served with rice."
   },
   "protein-10": {
     "category": "proteins",
-    "name": "Snail",
-    "price": 5000,
-    "image": "assets/snail.jpeg",
-    "description": "Premium snail option for customers who want a luxury local touch."
+    "name": "Croaker Fish Pepper Soup (Special Order)",
+    "price": 30000,
+    "image": "assets/croaker-fish.jpeg",
+    "description": "Special order: premium croaker fish pepper soup."
+  },
+  "protein-11": {
+    "category": "proteins",
+    "name": "Native Rice (Special Order)",
+    "price": 7000,
+    "image": "assets/native-rice.jpeg",
+    "description": "Special order: native rice prepared with traditional spices."
+  },
+  "protein-12": {
+    "category": "proteins",
+    "name": "Spaghetti (Special Order)",
+    "price": 4000,
+    "image": "assets/designer-spaghetti.jpeg",
+    "description": "Special order: tomato-rich spaghetti prepared to request."
+  },
+  "protein-13": {
+    "category": "proteins",
+    "name": "Seafood Okra with Garri or Semo (Special Order)",
+    "price": 26500,
+    "image": "assets/okra-soup.jpeg",
+    "description": "Special order: seafood okra served with garri or semo."
   },
   "soup-1": {
     "category": "soups",
-    "name": "Egusi Soup",
-    "price": 4200,
+    "name": "Egusi Soup and Meat",
+    "price": 9000,
     "image": "assets/egusi-soup.jpeg",
-    "description": "Melon-seed soup with rich body and satisfying depth."
+    "description": "Premium egusi soup served with meat. Add garri or semo for NGN 1,500."
   },
   "soup-2": {
     "category": "soups",
-    "name": "Afang Soup",
-    "price": 4500,
+    "name": "Banga Soup and Meat",
+    "price": 20000,
     "image": "assets/afang-soup.jpeg",
-    "description": "Leafy soup with strong traditional flavor and comforting texture."
+    "description": "Rich banga soup and meat. Add garri or semo for NGN 1,500."
   },
   "soup-3": {
     "category": "soups",
-    "name": "Ogbono Soup",
-    "price": 4300,
+    "name": "Fisherman Soup with Fish",
+    "price": 25000,
     "image": "assets/ogbono-soup.jpeg",
-    "description": "Smooth ogbono soup with a glossy finish and hearty taste."
+    "description": "Seafood-rich fisherman soup with fish. Add garri or semo for NGN 1,500."
   },
   "soup-4": {
     "category": "soups",
-    "name": "Vegetable Soup",
-    "price": 4000,
+    "name": "Vegetable Soup and Meat",
+    "price": 9000,
     "image": "assets/vegetable-soup.jpeg",
-    "description": "A vibrant vegetable soup with freshness and balanced richness."
+    "description": "Fresh vegetable soup with meat. Add garri or semo for NGN 1,500."
   },
   "soup-5": {
     "category": "soups",
-    "name": "Bitterleaf Soup",
-    "price": 4600,
-    "image": "assets/bitterleaf-soup.jpeg",
-    "description": "Traditional bitterleaf soup prepared for bold local palates."
+    "name": "Okazi Soup and Meat",
+    "price": 9000,
+    "image": "assets/afang-soup.jpeg",
+    "description": "Traditional okazi soup served with meat. Add garri or semo for NGN 1,500."
   },
   "soup-6": {
     "category": "soups",
-    "name": "Okra Soup",
-    "price": 3900,
+    "name": "Bitter Leaf Soup and Meat",
+    "price": 9000,
+    "image": "assets/bitterleaf-soup.jpeg",
+    "description": "Authentic bitter leaf soup with meat. Add garri or semo for NGN 1,500."
+  },
+  "soup-7": {
+    "category": "soups",
+    "name": "Okoro Soup and Meat",
+    "price": 9000,
     "image": "assets/okra-soup.jpeg",
-    "description": "Soft okra soup with a light draw and satisfying aroma."
+    "description": "Home-style okoro soup with meat. Add garri or semo for NGN 1,500."
+  },
+  "soup-8": {
+    "category": "soups",
+    "name": "Ogbono Soup and Meat",
+    "price": 9000,
+    "image": "assets/ogbono-soup.jpeg",
+    "description": "Smooth ogbono soup served with meat. Add garri or semo for NGN 1,500."
+  },
+  "soup-9": {
+    "category": "soups",
+    "name": "White Soup",
+    "price": 15500,
+    "image": "assets/egusi-soup.jpeg",
+    "description": "Premium white soup. Add garri or semo for NGN 1,500."
+  },
+  "soup-10": {
+    "category": "soups",
+    "name": "Native Soup and Meat",
+    "price": 9000,
+    "image": "assets/afang-soup.jpeg",
+    "description": "Native soup served with meat. Add garri or semo for NGN 1,500."
   },
   "swallow-1": {
     "category": "swallow",
     "name": "Garri",
-    "price": 1200,
+    "price": 1500,
     "image": "assets/garri.jpeg",
-    "description": "Classic eba option with smooth finish, ideal for egusi, ogbono, and vegetable soups."
+    "description": "Freshly prepared eba to pair with soup selections."
   },
   "swallow-2": {
     "category": "swallow",
-    "name": "Semovita",
-    "price": 1400,
-    "image": "assets/semovita.jpeg",
-    "description": "Soft and stretchy semovita prepared for customers who prefer a lighter, refined swallow texture."
-  },
-  "swallow-3": {
-    "category": "swallow",
-    "name": "Loi-loi",
+    "name": "Semo",
     "price": 1500,
-    "image": "assets/loi-loi.jpeg",
-    "description": "Traditional loi-loi option with rich local character for authentic meal combinations."
-  },
-  "swallow-4": {
-    "category": "swallow",
-    "name": "Poundo Yam",
-    "price": 1800,
-    "image": "assets/poundo-yam.jpeg",
-    "description": "Premium poundo yam option with satisfying body, perfect for bitterleaf, afang, and okra soup plates."
+    "image": "assets/semovita.jpeg",
+    "description": "Soft semo swallow, ideal with traditional soup options."
   }
 }

@@ -11,6 +11,7 @@ const menuSections = {
 
 const riceGrid = document.getElementById('rice-grid');
 const proteinGrid = document.getElementById('protein-grid');
+const specialGrid = document.getElementById('special-grid');
 const soupGrid = document.getElementById('soup-grid');
 const swallowGrid = document.getElementById('swallow-grid');
 let menuEventSource = null;
@@ -67,8 +68,12 @@ function updateMenuSections(sections) {
   menuSections.soups = sections.soups || [];
   menuSections.swallow = sections.swallow || [];
 
+  const regularProteins = menuSections.proteins.filter((item) => !String(item.name || '').includes('(Special Order)'));
+  const specialOrders = menuSections.proteins.filter((item) => String(item.name || '').includes('(Special Order)'));
+
   renderCards(menuSections.rice, riceGrid, true);
-  renderCards(menuSections.proteins, proteinGrid, false);
+  renderCards(regularProteins, proteinGrid, false);
+  renderCards(specialOrders, specialGrid, true);
   renderCards(menuSections.soups, soupGrid, true);
   renderCards(menuSections.swallow, swallowGrid, true);
 }
