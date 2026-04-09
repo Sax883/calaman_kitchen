@@ -413,6 +413,15 @@ function showTrackerAfterCOD(order) {
   renderTracker(order);
 }
 
+function hasPaymentBeenSubmitted(order) {
+  const status = String(order?.paymentStatus || '').toLowerCase();
+  return Boolean(order?.paymentSubmittedAt)
+    || status.includes('pending manual confirmation')
+    || status.includes('blockchain confirmation pending')
+    || status === 'paid'
+    || status === 'cash collected';
+}
+
 async function restoreActiveOrder() {
   const orderId = sessionStorage.getItem(ACTIVE_ORDER_KEY) || sessionStorage.getItem('ck-last-order-id');
   if (!orderId) {
@@ -423,12 +432,7 @@ async function restoreActiveOrder() {
     const data = await fetchOrder(orderId);
     const order = data.order;
     const instructions = data.paymentInstructions || {};
-    const status = String(order.paymentStatus || '').toLowerCase();
-    const paymentSubmitted = Boolean(order.paymentSubmittedAt)
-      || status.includes('pending manual confirmation')
-      || status.includes('blockchain confirmation pending')
-      || status === 'paid'
-      || status === 'cash collected';
+    const paymentSubmitted = hasPaymentBeenSubmitted(order);
 
     activeOrderId = order.id;
     activeOrder = order;
@@ -439,6 +443,8 @@ async function restoreActiveOrder() {
 
     if (order.paymentMethodKey === 'cod') {
       showTrackerAfterCOD(order);
+      connectCustomerStream(order.id);
+      startPolling(order.id);
     } else if (paymentSubmitted) {
       window.location.href = 'order-status.html';
       return true;
@@ -447,8 +453,6 @@ async function restoreActiveOrder() {
       showPaymentPanel(order, instructions);
     }
 
-    connectCustomerStream(order.id);
-    startPolling(order.id);
     sessionStorage.setItem(ACTIVE_ORDER_KEY, order.id);
     return true;
   } catch (_) {
@@ -611,12 +615,11 @@ async function handlePlaceOrder(event) {
     // COD: skip payment panel, go straight to tracker
     if (result.order.paymentMethodKey === 'cod') {
       showTrackerAfterCOD(result.order);
+      connectCustomerStream(result.order.id);
+      startPolling(result.order.id);
     }
 
     showOrderSuccessPopup(result.order);
-
-    connectCustomerStream(result.order.id);
-    startPolling(result.order.id);
   } catch (err) {
     showFormAlert(err.message || 'Something went wrong. Please try again.', 'danger');
   } finally {

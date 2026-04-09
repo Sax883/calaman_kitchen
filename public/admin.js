@@ -58,6 +58,8 @@ let knownOrderIds = new Set();
 let seenLiveOrderIds = new Set();
 let hasLoadedOrdersOnce = false;
 let hasAskedNotificationPermission = false;
+let ordersRefreshHandle = 0;
+let alertAudioContext = null;
 
 function rememberOrders(orders) {
   knownOrderIds = new Set((orders || []).map((order) => order.id));
@@ -491,6 +493,44 @@ function triggerBrowserNotice(order) {
   }
 }
 
+function stopOrdersAutoRefresh() {
+  if (ordersRefreshHandle) {
+    window.clearInterval(ordersRefreshHandle);
+    ordersRefreshHandle = 0;
+  }
+}
+
+function startOrdersAutoRefresh() {
+  stopOrdersAutoRefresh();
+  ordersRefreshHandle = window.setInterval(() => {
+    if (!adminToken) {
+      stopOrdersAutoRefresh();
+      return;
+    }
+
+    loadOrders();
+  }, 5000);
+}
+
+function ensureAlertAudioReady() {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) {
+      return;
+    }
+
+    if (!alertAudioContext) {
+      alertAudioContext = new AudioContextClass();
+    }
+
+    if (alertAudioContext.state === 'suspended') {
+      alertAudioContext.resume().catch(() => {});
+    }
+  } catch (_) {
+    // Ignore initialization failures.
+  }
+}
+
 function createPushBannerStack() {
   let stack = document.getElementById('admin-push-banner-stack');
   if (!stack) {
@@ -537,22 +577,25 @@ function playOrderAlertTone() {
   }
 
   try {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) {
+    ensureAlertAudioReady();
+    if (!alertAudioContext) {
       return;
     }
 
-    const audioContext = new AudioContextClass();
-    const now = audioContext.currentTime;
+    if (alertAudioContext.state === 'suspended') {
+      alertAudioContext.resume().catch(() => {});
+    }
+
+    const now = alertAudioContext.currentTime;
     const frequencies = [880, 660, 990];
 
     frequencies.forEach((frequency, index) => {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      const oscillator = alertAudioContext.createOscillator();
+      const gainNode = alertAudioContext.createGain();
       oscillator.type = 'sine';
       oscillator.frequency.value = frequency;
       oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      gainNode.connect(alertAudioContext.destination);
 
       const start = now + index * 0.12;
       const end = start + 0.1;
@@ -562,10 +605,6 @@ function playOrderAlertTone() {
       oscillator.start(start);
       oscillator.stop(end);
     });
-
-    window.setTimeout(() => {
-      audioContext.close().catch(() => {});
-    }, 900);
   } catch (_) {
     // Ignore sound errors in browsers that restrict autoplay.
   }
@@ -800,6 +839,7 @@ function connectStream() {
     liveBadge.textContent = 'Live: connected';
     liveBadge.className = 'badge text-bg-success fs-6 px-3 py-2 rounded-pill';
     notificationStatus.textContent = 'Listening';
+    loadOrders();
   });
 
   adminSocket.on('order:event', (message) => {
@@ -850,6 +890,7 @@ function connectStream() {
 function clearSession() {
   adminToken = '';
   localStorage.removeItem(ADMIN_TOKEN_KEY);
+  stopOrdersAutoRefresh();
   disconnectStream();
   setDashboardVisible(false);
 }
@@ -858,12 +899,17 @@ async function initializeDashboard() {
   knownOrderIds.clear();
   seenLiveOrderIds.clear();
   hasLoadedOrdersOnce = false;
+  ensureAlertAudioReady();
   requestBrowserNotificationPermission();
   setDashboardVisible(true);
   await loadOrders();
   await loadMenuEditor();
+  startOrdersAutoRefresh();
   connectStream();
 }
+
+document.addEventListener('click', ensureAlertAudioReady, { passive: true });
+document.addEventListener('keydown', ensureAlertAudioReady, { passive: true });
 
 adminLoginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
