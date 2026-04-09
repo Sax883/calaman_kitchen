@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
@@ -15,6 +16,28 @@ const CRYPTO_WEBHOOK_SECRET = process.env.CRYPTO_WEBHOOK_SECRET || 'calaman-cryp
 const ADMIN_USERNAME = "calaman's_kitchen";
 const ADMIN_PASSWORD = '@calaman081';
 const ADMIN_TOKEN = Buffer.from(`${ADMIN_USERNAME}:${ADMIN_PASSWORD}`).toString('base64');
+const WHATSAPP_ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN || '';
+const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
+
+function normalizeWhatsAppNumber(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  if (!digits) {
+    return '';
+  }
+
+  if (digits.startsWith('0') && digits.length === 11) {
+    return `234${digits.slice(1)}`;
+  }
+
+  if (digits.startsWith('234')) {
+    return digits;
+  }
+
+  return digits;
+}
+
+const INDEX_WHATSAPP_NUMBER = '08159462435';
+const WHATSAPP_TO = normalizeWhatsAppNumber(process.env.WHATSAPP_TO || INDEX_WHATSAPP_NUMBER);
 
 const paymentDetails = {
   bankTransfer: {
@@ -338,6 +361,91 @@ function createTimelineEntry(label, detail) {
     label,
     detail: detail || ''
   };
+}
+
+function postJson(targetUrl, payload, headers) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(targetUrl);
+    const body = JSON.stringify(payload);
+    const options = {
+      method: 'POST',
+      hostname: parsed.hostname,
+      path: `${parsed.pathname}${parsed.search}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+        ...(headers || {})
+      }
+    };
+
+    const request = https.request(options, (response) => {
+      let responseData = '';
+      response.on('data', (chunk) => {
+        responseData += chunk;
+      });
+      response.on('end', () => {
+        resolve({
+          statusCode: response.statusCode || 0,
+          body: responseData
+        });
+      });
+    });
+
+    request.on('error', reject);
+    request.write(body);
+    request.end();
+  });
+}
+
+function formatOrderWhatsAppMessage(order) {
+  const itemSummary = (order.items || [])
+    .slice(0, 5)
+    .map((item) => `${item.quantity}x ${item.name}`)
+    .join(', ');
+
+  return [
+    `New order: ${order.id}`,
+    `Customer: ${order.customer.name}`,
+    `Phone: ${order.customer.phone}`,
+    `Total: NGN ${Number(order.total || 0).toLocaleString('en-NG')}`,
+    `Payment: ${order.paymentMethodLabel}`,
+    `Items: ${itemSummary || 'See dashboard for details.'}`,
+    'Open admin dashboard for live actions.'
+  ].join('\n');
+}
+
+async function sendWhatsAppBusinessNotification(order) {
+  if (!WHATSAPP_ACCESS_TOKEN || !WHATSAPP_PHONE_NUMBER_ID || !WHATSAPP_TO) {
+    return { sent: false, reason: 'not-configured' };
+  }
+
+  const endpoint = `https://graph.facebook.com/v22.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`;
+  const payload = {
+    messaging_product: 'whatsapp',
+    recipient_type: 'individual',
+    to: WHATSAPP_TO,
+    type: 'text',
+    text: {
+      preview_url: false,
+      body: formatOrderWhatsAppMessage(order)
+    }
+  };
+
+  try {
+    const response = await postJson(endpoint, payload, {
+      Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`
+    });
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      console.error('WhatsApp notification failed:', response.statusCode, response.body);
+      return { sent: false, reason: `http-${response.statusCode}` };
+    }
+
+    return { sent: true };
+  } catch (error) {
+    console.error('WhatsApp notification error:', error.message);
+    return { sent: false, reason: 'request-error' };
+  }
 }
 
 function computeDisplayStatus(order) {
@@ -838,6 +946,7 @@ const server = http.createServer(async (req, res) => {
       orders.push(order);
       writeOrders(orders);
       broadcast('new-order', order);
+      void sendWhatsAppBusinessNotification(order);
 
       sendJson(res, 201, {
         message: 'Order received successfully.',
@@ -1217,4 +1326,10 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`Calaman's Kitchen running on http://localhost:${PORT}`);
+
+  if (WHATSAPP_ACCESS_TOKEN && WHATSAPP_PHONE_NUMBER_ID && WHATSAPP_TO) {
+    console.log(`WhatsApp Business alerts: enabled (to ${WHATSAPP_TO})`);
+  } else {
+    console.log('WhatsApp Business alerts: disabled (set WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID, and optional WHATSAPP_TO)');
+  }
 });

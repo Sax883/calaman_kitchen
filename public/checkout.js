@@ -57,7 +57,9 @@ const orderSuccessPopup = document.getElementById('order-success-popup');
 const orderSuccessPopupText = document.getElementById('order-success-popup-text');
 const orderSuccessPopupOrder = document.getElementById('order-success-popup-order');
 const orderSuccessPopupId = document.getElementById('order-success-popup-id');
+const orderSuccessWhatsAppLink = document.getElementById('order-success-whatsapp-link');
 const orderSuccessPopupClose = document.getElementById('order-success-popup-close');
+const BUSINESS_WHATSAPP_NUMBER = '2348159462435';
 
 // Bank refs
 const bankTransferBlock = document.getElementById('bank-transfer-block');
@@ -212,6 +214,23 @@ function showOrderSuccessPopup(order) {
   orderSuccessPopupText.textContent = methodLabel;
   orderSuccessPopupId.textContent = order.id || '-';
   orderSuccessPopupOrder.classList.toggle('d-none', !order.id);
+
+  if (orderSuccessWhatsAppLink) {
+    const itemsText = (order.items || [])
+      .slice(0, 5)
+      .map((item) => `${item.quantity}x ${item.name}`)
+      .join(', ');
+    const message = [
+      `Hello Calaman's Kitchen, I just placed order ${order.id}.`,
+      `Name: ${order.customer?.name || '-'}`,
+      `Phone: ${order.customer?.phone || '-'}`,
+      `Total: ${formatCurrency(order.total || 0)}`,
+      `Items: ${itemsText || 'See dashboard'}`
+    ].join('\n');
+    const encoded = encodeURIComponent(message);
+    orderSuccessWhatsAppLink.href = `https://wa.me/${BUSINESS_WHATSAPP_NUMBER}?text=${encoded}`;
+  }
+
   orderSuccessPopup.classList.remove('d-none');
   document.body.style.overflow = 'hidden';
   triggerOrderSuccessFeedback();

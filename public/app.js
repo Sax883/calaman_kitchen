@@ -3,7 +3,7 @@ const CART_KEY = 'calamans-kitchen-cart';
 const FALLBACK_MENU_SECTIONS = {
   rice: [
     { id: 'rice-1', name: 'Party Jollof Rice', price: 5000, image: 'assets/smoky-party-jollof-rice.jpeg', description: 'Classic party-style jollof rice with rich pepper flavor and signature smoky finish.', available: 1 },
-    { id: 'rice-2', name: 'Fried Rice', price: 5000, image: 'assets/premium-fried-rice.jpeg', description: 'Freshly prepared fried rice with vegetables and balanced savory seasoning.', available: 1 },
+    { id: 'rice-2', name: 'Fried Rice', price: 5000, image: 'assets/basmati-special-rice.jpeg', description: 'Freshly prepared fried rice with vegetables and balanced savory seasoning.', available: 1 },
     { id: 'rice-3', name: 'Coconut Rice', price: 5000, image: 'assets/coconut-rice.jpeg', description: 'Aromatic coconut rice with a smooth finish and premium home-style taste.', available: 1 }
   ],
   proteins: [
@@ -11,27 +11,27 @@ const FALLBACK_MENU_SECTIONS = {
     { id: 'protein-2', name: 'Turkey', price: 12000, image: 'assets/turkey-wings.jpeg', description: 'Premium turkey portion marinated and cooked for full flavor.', available: 1 },
     { id: 'protein-3', name: 'Beef', price: 3500, image: 'assets/beef.jpeg', description: 'Tender beef cuts simmered to a rich and satisfying finish.', available: 1 },
     { id: 'protein-4', name: 'Snail', price: 6000, image: 'assets/snail.jpeg', description: 'Premium snail portion prepared for specialty local meals.', available: 1 },
-    { id: 'protein-5', name: 'Isi Ewu (Special Order)', price: 25000, image: 'assets/assorted-meat.jpeg', description: 'Special order: classic isi ewu served with bold traditional seasoning.', available: 1 },
-    { id: 'protein-6', name: 'Nkwobi (Special Order)', price: 30000, image: 'assets/goat-meat.jpeg', description: 'Special order: rich nkwobi presentation made fresh to order.', available: 1 },
-    { id: 'protein-7', name: 'Assorted Pepper Soup (Special Order)', price: 20000, image: 'assets/assorted-meat.jpeg', description: 'Special order: assorted pepper soup cooked with aromatic local spices.', available: 1 },
-    { id: 'protein-8', name: 'Catfish Pepper Soup and Yam (Special Order)', price: 25000, image: 'assets/catfish.jpeg', description: 'Special order: catfish pepper soup served with yam.', available: 1 },
-    { id: 'protein-9', name: 'Catfish Pepper Soup and Rice (Special Order)', price: 20000, image: 'assets/catfish.jpeg', description: 'Special order: catfish pepper soup served with rice.', available: 1 },
-    { id: 'protein-10', name: 'Croaker Fish Pepper Soup (Special Order)', price: 30000, image: 'assets/croaker-fish.jpeg', description: 'Special order: premium croaker fish pepper soup.', available: 1 },
+    { id: 'protein-5', name: 'Isi Ewu (Special Order)', price: 25000, image: 'assets/isi-ewu.jpeg', description: 'Special order: classic isi ewu served with bold traditional seasoning.', available: 1 },
+    { id: 'protein-6', name: 'Nkwobi (Special Order)', price: 30000, image: 'assets/nkwobi.jpeg', description: 'Special order: rich nkwobi presentation made fresh to order.', available: 1 },
+    { id: 'protein-7', name: 'Assorted Pepper Soup (Special Order)', price: 20000, image: 'assets/assorted-pepper-soup.jpeg', description: 'Special order: assorted pepper soup cooked with aromatic local spices.', available: 1 },
+    { id: 'protein-8', name: 'Catfish Pepper Soup and Yam (Special Order)', price: 25000, image: 'assets/catfish-peppersoup-with-yam.jpeg', description: 'Special order: catfish pepper soup served with yam.', available: 1 },
+    { id: 'protein-9', name: 'Catfish Pepper Soup and Rice (Special Order)', price: 20000, image: 'assets/catfish-pepper-soup-with-rice.jpeg', description: 'Special order: catfish pepper soup served with rice.', available: 1 },
+    { id: 'protein-10', name: 'Croaker Fish Pepper Soup (Special Order)', price: 30000, image: 'assets/croaker-pepper-soup.jpeg', description: 'Special order: premium croaker fish pepper soup.', available: 1 },
     { id: 'protein-11', name: 'Native Rice (Special Order)', price: 7000, image: 'assets/native-rice.jpeg', description: 'Special order: native rice prepared with traditional spices.', available: 1 },
     { id: 'protein-12', name: 'Spaghetti (Special Order)', price: 4000, image: 'assets/designer-spaghetti.jpeg', description: 'Special order: tomato-rich spaghetti prepared to request.', available: 1 },
-    { id: 'protein-13', name: 'Seafood Okra with Garri or Semo (Special Order)', price: 26500, image: 'assets/okra-soup.jpeg', description: 'Special order: seafood okra served with garri or semo.', available: 1 }
+    { id: 'protein-13', name: 'SeaFood Okra', price: 26500, image: 'assets/seafood-okra.jpeg', description: 'Special order: SeaFood Okra prepared fresh to request.', available: 1 }
   ],
   soups: [
     { id: 'soup-1', name: 'Egusi Soup and Meat', price: 9000, image: 'assets/egusi-soup.jpeg', description: 'Premium egusi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
     { id: 'soup-2', name: 'Banga Soup and Meat', price: 20000, image: 'assets/afang-soup.jpeg', description: 'Rich banga soup and meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-3', name: 'Fisherman Soup with Fish', price: 25000, image: 'assets/ogbono-soup.jpeg', description: 'Seafood-rich fisherman soup with fish. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-3', name: 'Fisherman Soup with Fish', price: 25000, image: 'assets/fisherman-soup.jpeg', description: 'Seafood-rich fisherman soup with fish. Add garri or semo for NGN 1,500.', available: 1 },
     { id: 'soup-4', name: 'Vegetable Soup and Meat', price: 9000, image: 'assets/vegetable-soup.jpeg', description: 'Fresh vegetable soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
     { id: 'soup-5', name: 'Okazi Soup and Meat', price: 9000, image: 'assets/afang-soup.jpeg', description: 'Traditional okazi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
     { id: 'soup-6', name: 'Bitter Leaf Soup and Meat', price: 9000, image: 'assets/bitterleaf-soup.jpeg', description: 'Authentic bitter leaf soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
     { id: 'soup-7', name: 'Okoro Soup and Meat', price: 9000, image: 'assets/okra-soup.jpeg', description: 'Home-style okoro soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
     { id: 'soup-8', name: 'Ogbono Soup and Meat', price: 9000, image: 'assets/ogbono-soup.jpeg', description: 'Smooth ogbono soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-9', name: 'White Soup', price: 15500, image: 'assets/egusi-soup.jpeg', description: 'Premium white soup. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-10', name: 'Native Soup and Meat', price: 9000, image: 'assets/afang-soup.jpeg', description: 'Native soup served with meat. Add garri or semo for NGN 1,500.', available: 1 }
+    { id: 'soup-9', name: 'White Soup', price: 15500, image: 'assets/white-soup.jpeg', description: 'Premium white soup. Add garri or semo for NGN 1,500.', available: 1 },
+    { id: 'soup-10', name: 'Native Soup and Meat', price: 9000, image: 'assets/native-soup.jpeg', description: 'Native soup served with meat. Add garri or semo for NGN 1,500.', available: 1 }
   ],
   swallow: [
     { id: 'swallow-1', name: 'Garri', price: 1500, image: 'assets/garri.jpeg', description: 'Freshly prepared eba to pair with soup selections.', available: 1 },
@@ -57,6 +57,25 @@ const cartItems = document.getElementById('cart-items');
 const cartTotal = document.getElementById('cart-total');
 const clearCartButton = document.getElementById('clear-cart');
 let menuEventSource = null;
+let testimonialTimer = 0;
+
+const liveTestimonials = [
+  { name: 'Amina O.', role: 'Corporate lunch order', message: 'The jollof rice and peppered chicken were perfect. Delivery was on time, portions were generous, and the packaging looked premium.' },
+  { name: 'Emeka U.', role: 'Weekend family event', message: 'We ordered soups and assorted proteins for a family event and everyone asked for the vendor. Calaman\'s Kitchen is now our go-to.' },
+  { name: 'Sarah I.', role: 'First-time online customer', message: 'The designer spaghetti and turkey were very tasty and fresh. Checkout was easy and I got immediate order confirmation.' },
+  { name: 'Tunde A.', role: 'Office catering client', message: 'Excellent professionalism from order to delivery. The native rice and goat meat had authentic flavor and clean presentation.' },
+  { name: 'Ngozi K.', role: 'Soup lover', message: 'I love how rich the egusi and afang soups tasted. You can tell the kitchen is disciplined and quality-focused.' },
+  { name: 'Femi D.', role: 'Repeat customer', message: 'Fast response, beautiful plating, and reliable service. This is one of the most professional kitchen brands I have used.' },
+  { name: 'Blessing N.', role: 'Birthday tray order', message: 'The coconut rice and turkey arrived hot and very fresh. Everyone at the birthday table was impressed.' },
+  { name: 'Ifeanyi M.', role: 'Late evening order', message: 'Even with a late order, the kitchen delivered with quality. The soup was rich and perfectly seasoned.' },
+  { name: 'Ruth E.', role: 'Family dinner', message: 'Their packaging and food hygiene stood out immediately. Taste and presentation were both top class.' },
+  { name: 'David P.', role: 'Church event coordinator', message: 'Calaman\'s Kitchen handled our bulk order professionally and stayed consistent across every tray.' },
+  { name: 'Chioma A.', role: 'Weekend special order', message: 'The catfish pepper soup was deeply flavorful and came in generous portions. Highly recommended.' },
+  { name: 'Henry B.', role: 'Monthly office order', message: 'Reliable service every month. The team communicates clearly and the meals always arrive as expected.' },
+  { name: 'Mercy J.', role: 'New customer', message: 'I placed my first order online and the process was smooth from cart to confirmation.' },
+  { name: 'Kingsley T.', role: 'Private dinner host', message: 'Guests praised the native rice and protein selection all night. Service felt premium and organized.' },
+  { name: 'Ada O.', role: 'Celebration order', message: 'Great taste, prompt delivery, and polite follow-up. Calaman\'s Kitchen made our celebration meal stress-free.' }
+];
 
 function formatCurrency(value) {
   return new Intl.NumberFormat('en-NG', {
@@ -316,6 +335,82 @@ function connectMenuStream() {
   };
 }
 
+function testimonialTimeLabel(minutesAgo) {
+  if (minutesAgo <= 0) {
+    return 'Just now';
+  }
+
+  if (minutesAgo < 60) {
+    return `${minutesAgo}m`;
+  }
+
+  const hours = Math.floor(minutesAgo / 60);
+  return `${hours}h`;
+}
+
+function testimonialCardMarkup(entry, index, minutesAgo) {
+  return `
+    <article class="live-comment-item" data-testimonial-index="${index}">
+      <div class="live-comment-avatar">${entry.name.charAt(0)}</div>
+      <div class="live-comment-body">
+        <div class="live-comment-head">
+          <strong>${entry.name}</strong>
+          <small>${entry.role}</small>
+        </div>
+        <p>${entry.message}</p>
+        <div class="live-comment-meta">${testimonialTimeLabel(minutesAgo)}</div>
+      </div>
+    </article>
+  `;
+}
+
+function initLiveTestimonials() {
+  const grid = document.getElementById('live-testimonials-grid');
+  if (!grid) {
+    return;
+  }
+
+  const visibleSlots = 3;
+  const totalCount = liveTestimonials.length;
+  let startIndex = 0;
+  let rotationTick = 0;
+
+  const renderVisibleWindow = () => {
+    if (totalCount === 0) {
+      grid.innerHTML = '';
+      return;
+    }
+
+    const visibleEntries = [];
+    for (let offset = 0; offset < Math.min(visibleSlots, totalCount); offset += 1) {
+      const idx = (startIndex + offset) % totalCount;
+      const minutesAgo = (rotationTick * 2 + offset * 3 + (idx % 4)) % 120;
+      visibleEntries.push({ entry: liveTestimonials[idx], index: idx, minutesAgo });
+    }
+
+    grid.innerHTML = visibleEntries
+      .map(({ entry, index, minutesAgo }) => testimonialCardMarkup(entry, index, minutesAgo))
+      .join('');
+  };
+
+  renderVisibleWindow();
+
+  if (testimonialTimer) {
+    window.clearInterval(testimonialTimer);
+    testimonialTimer = 0;
+  }
+
+  if (totalCount <= visibleSlots) {
+    return;
+  }
+
+  testimonialTimer = window.setInterval(() => {
+    rotationTick += 1;
+    startIndex = (startIndex + 1) % totalCount;
+    renderVisibleWindow();
+  }, 7000);
+}
+
 document.addEventListener('click', (event) => {
   const addButton = event.target.closest('.add-to-cart');
   if (addButton) {
@@ -340,3 +435,4 @@ loadPersistedCart();
 renderCart();
 loadMenu();
 connectMenuStream();
+initLiveTestimonials();

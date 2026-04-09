@@ -10,7 +10,7 @@
     "category": "rice",
     "name": "Fried Rice",
     "price": 5000,
-    "image": "assets/premium-fried-rice.jpeg",
+    "image": "assets/basmati-special-rice.jpeg",
     "description": "Freshly prepared fried rice with vegetables and balanced savory seasoning."
   },
   "rice-3": {
@@ -52,42 +52,42 @@
     "category": "proteins",
     "name": "Isi Ewu (Special Order)",
     "price": 25000,
-    "image": "assets/assorted-meat.jpeg",
+    "image": "assets/isi-ewu.jpeg",
     "description": "Special order: classic isi ewu served with bold traditional seasoning."
   },
   "protein-6": {
     "category": "proteins",
     "name": "Nkwobi (Special Order)",
     "price": 30000,
-    "image": "assets/goat-meat.jpeg",
+    "image": "assets/nkwobi.jpeg",
     "description": "Special order: rich nkwobi presentation made fresh to order."
   },
   "protein-7": {
     "category": "proteins",
     "name": "Assorted Pepper Soup (Special Order)",
     "price": 20000,
-    "image": "assets/assorted-meat.jpeg",
+    "image": "assets/assorted-pepper-soup.jpeg",
     "description": "Special order: assorted pepper soup cooked with aromatic local spices."
   },
   "protein-8": {
     "category": "proteins",
     "name": "Catfish Pepper Soup and Yam (Special Order)",
     "price": 25000,
-    "image": "assets/catfish.jpeg",
+    "image": "assets/catfish-peppersoup-with-yam.jpeg",
     "description": "Special order: catfish pepper soup served with yam."
   },
   "protein-9": {
     "category": "proteins",
     "name": "Catfish Pepper Soup and Rice (Special Order)",
     "price": 20000,
-    "image": "assets/catfish.jpeg",
+    "image": "assets/catfish-pepper-soup-with-rice.jpeg",
     "description": "Special order: catfish pepper soup served with rice."
   },
   "protein-10": {
     "category": "proteins",
     "name": "Croaker Fish Pepper Soup (Special Order)",
     "price": 30000,
-    "image": "assets/croaker-fish.jpeg",
+    "image": "assets/croaker-pepper-soup.jpeg",
     "description": "Special order: premium croaker fish pepper soup."
   },
   "protein-11": {
@@ -106,10 +106,10 @@
   },
   "protein-13": {
     "category": "proteins",
-    "name": "Seafood Okra with Garri or Semo (Special Order)",
+    "name": "SeaFood Okra",
     "price": 26500,
-    "image": "assets/okra-soup.jpeg",
-    "description": "Special order: seafood okra served with garri or semo."
+    "image": "assets/seafood-okra.jpeg",
+    "description": "Special order: SeaFood Okra prepared fresh to request."
   },
   "soup-1": {
     "category": "soups",
@@ -129,7 +129,7 @@
     "category": "soups",
     "name": "Fisherman Soup with Fish",
     "price": 25000,
-    "image": "assets/ogbono-soup.jpeg",
+    "image": "assets/fisherman-soup.jpeg",
     "description": "Seafood-rich fisherman soup with fish. Add garri or semo for NGN 1,500."
   },
   "soup-4": {
@@ -171,14 +171,14 @@
     "category": "soups",
     "name": "White Soup",
     "price": 15500,
-    "image": "assets/egusi-soup.jpeg",
+    "image": "assets/white-soup.jpeg",
     "description": "Premium white soup. Add garri or semo for NGN 1,500."
   },
   "soup-10": {
     "category": "soups",
     "name": "Native Soup and Meat",
     "price": 9000,
-    "image": "assets/afang-soup.jpeg",
+    "image": "assets/native-soup.jpeg",
     "description": "Native soup served with meat. Add garri or semo for NGN 1,500."
   },
   "swallow-1": {

@@ -57,6 +57,7 @@ let alertSettings = {
 let knownOrderIds = new Set();
 let seenLiveOrderIds = new Set();
 let hasLoadedOrdersOnce = false;
+let hasAskedNotificationPermission = false;
 
 function rememberOrders(orders) {
   knownOrderIds = new Set((orders || []).map((order) => order.id));
@@ -474,6 +475,7 @@ function triggerBrowserNotice(order) {
   liveBadge.textContent = 'Live: new order';
   liveBadge.className = 'badge text-bg-danger fs-6 px-3 py-2 rounded-pill';
 
+  showPushBanner(order);
   playOrderAlertTone();
   triggerDeviceVibration();
   showOrderToast(order);
@@ -486,6 +488,46 @@ function triggerBrowserNotice(order) {
     } else if (Notification.permission !== 'denied') {
       Notification.requestPermission();
     }
+  }
+}
+
+function createPushBannerStack() {
+  let stack = document.getElementById('admin-push-banner-stack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'admin-push-banner-stack';
+    stack.className = 'admin-push-banner-stack';
+    document.body.appendChild(stack);
+  }
+
+  return stack;
+}
+
+function showPushBanner(order) {
+  const stack = createPushBannerStack();
+  const banner = document.createElement('div');
+  banner.className = 'admin-push-banner';
+  banner.innerHTML = `
+    <span class="admin-push-banner-title">New order alert</span>
+    <div class="admin-push-banner-body">
+      ${escapeHtml(order.customer.name)} placed ${escapeHtml(order.id)} for ${formatCurrency(order.total)}
+    </div>
+  `;
+
+  stack.prepend(banner);
+  window.setTimeout(() => {
+    banner.remove();
+  }, 7000);
+}
+
+function requestBrowserNotificationPermission() {
+  if (!('Notification' in window) || hasAskedNotificationPermission) {
+    return;
+  }
+
+  hasAskedNotificationPermission = true;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission().catch(() => {});
   }
 }
 
@@ -816,6 +858,7 @@ async function initializeDashboard() {
   knownOrderIds.clear();
   seenLiveOrderIds.clear();
   hasLoadedOrdersOnce = false;
+  requestBrowserNotificationPermission();
   setDashboardVisible(true);
   await loadOrders();
   await loadMenuEditor();
