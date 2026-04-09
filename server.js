@@ -324,8 +324,22 @@ function sendFile(res, filePath) {
       '.svg': 'image/svg+xml'
     };
 
+    let responseBody = content;
+    if (ext === '.html' && path.basename(filePath).toLowerCase() !== 'footer.html') {
+      try {
+        const html = content.toString('utf8');
+        if (html.includes('data-shared-footer')) {
+          const footerPath = path.join(publicDir, 'footer.html');
+          const footerMarkup = fs.readFileSync(footerPath, 'utf8');
+          responseBody = Buffer.from(html.replace('<div data-shared-footer></div>', footerMarkup), 'utf8');
+        }
+      } catch (_) {
+        responseBody = content;
+      }
+    }
+
     res.writeHead(200, { 'Content-Type': contentTypes[ext] || 'application/octet-stream' });
-    res.end(content);
+    res.end(responseBody);
   });
 }
 

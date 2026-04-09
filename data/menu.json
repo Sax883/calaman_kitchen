@@ -98,15 +98,15 @@
     "description": "Special order: native rice prepared with traditional spices."
   },
   "protein-12": {
-    "category": "proteins",
-    "name": "Spaghetti (Special Order)",
+    "category": "rice",
+    "name": "Spaghetti",
     "price": 4000,
     "image": "assets/designer-spaghetti.jpeg",
-    "description": "Special order: tomato-rich spaghetti prepared to request."
+    "description": "Tomato-rich spaghetti prepared fresh and ready for daily orders."
   },
   "protein-13": {
     "category": "proteins",
-    "name": "SeaFood Okra",
+    "name": "SeaFood Okra (Special Order)",
     "price": 26500,
     "image": "assets/seafood-okra.jpeg",
     "description": "Special order: SeaFood Okra prepared fresh to request."

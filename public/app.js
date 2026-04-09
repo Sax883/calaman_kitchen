@@ -4,7 +4,8 @@ const FALLBACK_MENU_SECTIONS = {
   rice: [
     { id: 'rice-1', name: 'Party Jollof Rice', price: 5000, image: 'assets/smoky-party-jollof-rice.jpeg', description: 'Classic party-style jollof rice with rich pepper flavor and signature smoky finish.', available: 1 },
     { id: 'rice-2', name: 'Fried Rice', price: 5000, image: 'assets/basmati-special-rice.jpeg', description: 'Freshly prepared fried rice with vegetables and balanced savory seasoning.', available: 1 },
-    { id: 'rice-3', name: 'Coconut Rice', price: 5000, image: 'assets/coconut-rice.jpeg', description: 'Aromatic coconut rice with a smooth finish and premium home-style taste.', available: 1 }
+    { id: 'rice-3', name: 'Coconut Rice', price: 5000, image: 'assets/coconut-rice.jpeg', description: 'Aromatic coconut rice with a smooth finish and premium home-style taste.', available: 1 },
+    { id: 'protein-12', name: 'Spaghetti', price: 4000, image: 'assets/designer-spaghetti.jpeg', description: 'Tomato-rich spaghetti prepared fresh and ready for daily orders.', available: 1 }
   ],
   proteins: [
     { id: 'protein-1', name: 'Chicken', price: 5000, image: 'assets/peppered-chicken.jpeg', description: 'Well-seasoned chicken portion, finished for rice and soup pairings.', available: 1 },
@@ -18,8 +19,7 @@ const FALLBACK_MENU_SECTIONS = {
     { id: 'protein-9', name: 'Catfish Pepper Soup and Rice (Special Order)', price: 20000, image: 'assets/catfish-pepper-soup-with-rice.jpeg', description: 'Special order: catfish pepper soup served with rice.', available: 1 },
     { id: 'protein-10', name: 'Croaker Fish Pepper Soup (Special Order)', price: 30000, image: 'assets/croaker-pepper-soup.jpeg', description: 'Special order: premium croaker fish pepper soup.', available: 1 },
     { id: 'protein-11', name: 'Native Rice (Special Order)', price: 7000, image: 'assets/native-rice.jpeg', description: 'Special order: native rice prepared with traditional spices.', available: 1 },
-    { id: 'protein-12', name: 'Spaghetti (Special Order)', price: 4000, image: 'assets/designer-spaghetti.jpeg', description: 'Special order: tomato-rich spaghetti prepared to request.', available: 1 },
-    { id: 'protein-13', name: 'SeaFood Okra', price: 26500, image: 'assets/seafood-okra.jpeg', description: 'Special order: SeaFood Okra prepared fresh to request.', available: 1 }
+    { id: 'protein-13', name: 'SeaFood Okra (Special Order)', price: 26500, image: 'assets/seafood-okra.jpeg', description: 'Special order: SeaFood Okra prepared fresh to request.', available: 1 }
   ],
   soups: [
     { id: 'soup-1', name: 'Egusi Soup and Meat', price: 9000, image: 'assets/egusi-soup.jpeg', description: 'Premium egusi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
@@ -348,9 +348,9 @@ function testimonialTimeLabel(minutesAgo) {
   return `${hours}h`;
 }
 
-function testimonialCardMarkup(entry, index, minutesAgo) {
+function testimonialCardMarkup(entry, index, minutesAgo, isFresh) {
   return `
-    <article class="live-comment-item" data-testimonial-index="${index}">
+    <article class="live-comment-item${isFresh ? ' is-fresh' : ''}" data-testimonial-index="${index}">
       <div class="live-comment-avatar">${entry.name.charAt(0)}</div>
       <div class="live-comment-body">
         <div class="live-comment-head">
@@ -364,6 +364,12 @@ function testimonialCardMarkup(entry, index, minutesAgo) {
   `;
 }
 
+function testimonialNode(entry, index, minutesAgo, isFresh) {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = testimonialCardMarkup(entry, index, minutesAgo, isFresh).trim();
+  return wrapper.firstElementChild;
+}
+
 function initLiveTestimonials() {
   const grid = document.getElementById('live-testimonials-grid');
   if (!grid) {
@@ -372,28 +378,33 @@ function initLiveTestimonials() {
 
   const visibleSlots = 3;
   const totalCount = liveTestimonials.length;
-  let startIndex = 0;
   let rotationTick = 0;
+  let nextIndex = visibleSlots;
+  let replaceSlot = 0;
+  const displayedIndexes = [];
 
-  const renderVisibleWindow = () => {
+  for (let i = 0; i < Math.min(visibleSlots, totalCount); i += 1) {
+    displayedIndexes.push(i);
+  }
+
+  const renderInitialWindow = () => {
     if (totalCount === 0) {
       grid.innerHTML = '';
       return;
     }
 
-    const visibleEntries = [];
-    for (let offset = 0; offset < Math.min(visibleSlots, totalCount); offset += 1) {
-      const idx = (startIndex + offset) % totalCount;
+    grid.innerHTML = '';
+    for (let offset = 0; offset < displayedIndexes.length; offset += 1) {
+      const idx = displayedIndexes[offset];
       const minutesAgo = (rotationTick * 2 + offset * 3 + (idx % 4)) % 120;
-      visibleEntries.push({ entry: liveTestimonials[idx], index: idx, minutesAgo });
+      const node = testimonialNode(liveTestimonials[idx], idx, minutesAgo, false);
+      if (node) {
+        grid.appendChild(node);
+      }
     }
-
-    grid.innerHTML = visibleEntries
-      .map(({ entry, index, minutesAgo }) => testimonialCardMarkup(entry, index, minutesAgo))
-      .join('');
   };
 
-  renderVisibleWindow();
+  renderInitialWindow();
 
   if (testimonialTimer) {
     window.clearInterval(testimonialTimer);
@@ -406,8 +417,23 @@ function initLiveTestimonials() {
 
   testimonialTimer = window.setInterval(() => {
     rotationTick += 1;
-    startIndex = (startIndex + 1) % totalCount;
-    renderVisibleWindow();
+
+    const updatedSlot = replaceSlot;
+    displayedIndexes[updatedSlot] = nextIndex % totalCount;
+    nextIndex = (nextIndex + 1) % totalCount;
+    replaceSlot = (replaceSlot + 1) % displayedIndexes.length;
+
+    const idx = displayedIndexes[updatedSlot];
+    const minutesAgo = (rotationTick * 2 + updatedSlot * 3 + (idx % 4)) % 120;
+    const nextNode = testimonialNode(liveTestimonials[idx], idx, minutesAgo, true);
+    const currentNode = grid.children[updatedSlot];
+
+    if (currentNode && nextNode) {
+      currentNode.replaceWith(nextNode);
+      return;
+    }
+
+    renderInitialWindow();
   }, 7000);
 }
 
