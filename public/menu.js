@@ -188,13 +188,22 @@ function addToCart(itemId) {
 
 async function loadMenu() {
   try {
-    const response = await fetch('/api/menu');
+    const response = await fetch('/api/menu', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Menu request failed (${response.status}).`);
+    }
+
     const result = await response.json();
-    updateMenuSections(result.sections || {});
-  } catch (_) {
+    if (!result.sections || typeof result.sections !== 'object' || Array.isArray(result.sections)) {
+      throw new Error('Menu response did not contain valid sections.');
+    }
+
+    updateMenuSections(result.sections);
+  } catch (error) {
     if (riceGrid) {
       riceGrid.innerHTML = '<div class="col-12 text-muted">Unable to load the menu right now.</div>';
     }
+    console.error('Unable to load the live menu:', error);
   }
 }
 

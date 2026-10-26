@@ -284,12 +284,13 @@ function parseBody(req) {
   });
 }
 
-function sendJson(res, statusCode, payload) {
+function sendJson(res, statusCode, payload, additionalHeaders = {}) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST,PATCH,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Webhook-Secret, Authorization'
+    'Access-Control-Allow-Headers': 'Content-Type, X-Webhook-Secret, Authorization',
+    ...additionalHeaders
   });
   res.end(JSON.stringify(payload));
 }
@@ -926,7 +927,9 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (url.pathname === '/api/menu' && req.method === 'GET') {
-    sendJson(res, 200, { sections: buildMenuSections() });
+    sendJson(res, 200, { sections: buildMenuSections() }, {
+      'Cache-Control': 'no-store, max-age=0'
+    });
     return;
   }
 

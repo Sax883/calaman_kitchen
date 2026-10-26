@@ -1,52 +1,6 @@
 const CART_KEY = 'calamans-kitchen-cart';
 
-const FALLBACK_MENU_SECTIONS = {
-  rice: [
-    { id: 'rice-1', name: 'Party Jollof Rice', price: 5000, image: 'assets/smoky-party-jollof-rice.jpeg', description: 'Classic party-style jollof rice with rich pepper flavor and signature smoky finish.', available: 1 },
-    { id: 'rice-2', name: 'Fried Rice', price: 5000, image: 'assets/basmati-special-rice.jpeg', description: 'Freshly prepared fried rice with vegetables and balanced savory seasoning.', available: 1 },
-    { id: 'rice-3', name: 'Coconut Rice', price: 5000, image: 'assets/coconut-rice.jpeg', description: 'Aromatic coconut rice with a smooth finish and premium home-style taste.', available: 1 },
-    { id: 'protein-12', name: 'Spaghetti', price: 4000, image: 'assets/designer-spaghetti.jpeg', description: 'Tomato-rich spaghetti prepared fresh and ready for daily orders.', available: 1 }
-  ],
-  proteins: [
-    { id: 'protein-1', name: 'Chicken', price: 5000, image: 'assets/peppered-chicken.jpeg', description: 'Well-seasoned chicken portion, finished for rice and soup pairings.', available: 1 },
-    { id: 'protein-2', name: 'Turkey', price: 12000, image: 'assets/turkey-wings.jpeg', description: 'Premium turkey portion marinated and cooked for full flavor.', available: 1 },
-    { id: 'protein-3', name: 'Beef', price: 3500, image: 'assets/beef.jpeg', description: 'Tender beef cuts simmered to a rich and satisfying finish.', available: 1 },
-    { id: 'protein-4', name: 'Snail', price: 6000, image: 'assets/snail.jpeg', description: 'Premium snail portion prepared for specialty local meals.', available: 1 },
-    { id: 'protein-5', name: 'Isi Ewu (Special Order)', price: 25000, image: 'assets/isi-ewu.jpeg', description: 'Special order: classic isi ewu served with bold traditional seasoning.', available: 1 },
-    { id: 'protein-6', name: 'Nkwobi (Special Order)', price: 30000, image: 'assets/nkwobi.jpeg', description: 'Special order: rich nkwobi presentation made fresh to order.', available: 1 },
-    { id: 'protein-7', name: 'Assorted Pepper Soup (Special Order)', price: 20000, image: 'assets/assorted-pepper-soup.jpeg', description: 'Special order: assorted pepper soup cooked with aromatic local spices.', available: 1 },
-    { id: 'protein-8', name: 'Catfish Pepper Soup and Yam (Special Order)', price: 25000, image: 'assets/catfish-peppersoup-with-yam.jpeg', description: 'Special order: catfish pepper soup served with yam.', available: 1 },
-    { id: 'protein-9', name: 'Catfish Pepper Soup and Rice (Special Order)', price: 20000, image: 'assets/catfish-pepper-soup-with-rice.jpeg', description: 'Special order: catfish pepper soup served with rice.', available: 1 },
-    { id: 'protein-10', name: 'Croaker Fish Pepper Soup (Special Order)', price: 30000, image: 'assets/croaker-pepper-soup.jpeg', description: 'Special order: premium croaker fish pepper soup.', available: 1 },
-    { id: 'protein-11', name: 'Native Rice (Special Order)', price: 7000, image: 'assets/native-rice.jpeg', description: 'Special order: native rice prepared with traditional spices.', available: 1 },
-    { id: 'protein-13', name: 'SeaFood Okra (Special Order)', price: 26500, image: 'assets/seafood-okra.jpeg', description: 'Special order: SeaFood Okra prepared fresh to request.', available: 1 }
-  ],
-  soups: [
-    { id: 'soup-1', name: 'Egusi Soup and Meat', price: 9000, image: 'assets/egusi-soup.jpeg', description: 'Premium egusi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-2', name: 'Banga Soup and Meat', price: 20000, image: 'assets/afang-soup.jpeg', description: 'Rich banga soup and meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-3', name: 'Fisherman Soup with Fish', price: 25000, image: 'assets/fisherman-soup.jpeg', description: 'Seafood-rich fisherman soup with fish. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-4', name: 'Vegetable Soup and Meat', price: 9000, image: 'assets/vegetable-soup.jpeg', description: 'Fresh vegetable soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-5', name: 'Okazi Soup and Meat', price: 9000, image: 'assets/afang-soup.jpeg', description: 'Traditional okazi soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-6', name: 'Bitter Leaf Soup and Meat', price: 9000, image: 'assets/bitterleaf-soup.jpeg', description: 'Authentic bitter leaf soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-7', name: 'Okoro Soup and Meat', price: 9000, image: 'assets/okra-soup.jpeg', description: 'Home-style okoro soup with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-8', name: 'Ogbono Soup and Meat', price: 9000, image: 'assets/ogbono-soup.jpeg', description: 'Smooth ogbono soup served with meat. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-9', name: 'White Soup', price: 15500, image: 'assets/white-soup.jpeg', description: 'Premium white soup. Add garri or semo for NGN 1,500.', available: 1 },
-    { id: 'soup-10', name: 'Native Soup and Meat', price: 9000, image: 'assets/native-soup.jpeg', description: 'Native soup served with meat. Add garri or semo for NGN 1,500.', available: 1 }
-  ],
-  swallow: [
-    { id: 'swallow-1', name: 'Garri', price: 1500, image: 'assets/garri.jpeg', description: 'Freshly prepared eba to pair with soup selections.', available: 1 },
-    { id: 'swallow-2', name: 'Semo', price: 1500, image: 'assets/semovita.jpeg', description: 'Soft semo swallow, ideal with traditional soup options.', available: 1 }
-  ]
-};
-
-const menuSections = {
-  rice: [],
-  proteins: [],
-  soups: [],
-  swallow: [],
-  drinks: [],
-  special: []
-};
+const menuSections = Object.create(null);
 
 const cart = [];
 
@@ -289,13 +243,6 @@ function updateMenuSections(sections) {
   renderCart();
 }
 
-function countMenuItems(sections) {
-  return Object.values(sections || {}).reduce(
-    (count, items) => count + (Array.isArray(items) ? items.length : 0),
-    0
-  );
-}
-
 function showCartToast(message) {
   let toast = document.getElementById('cart-toast');
   if (!toast) {
@@ -380,17 +327,23 @@ function loadPersistedCart() {
 
 async function loadMenu() {
   try {
-    const response = await fetch('/api/menu');
-    const result = await response.json();
-    const sections = result.sections || {};
-    if (countMenuItems(sections) === 0) {
-      updateMenuSections(FALLBACK_MENU_SECTIONS);
-      return;
+    const response = await fetch('/api/menu', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Menu request failed (${response.status}).`);
     }
 
-    updateMenuSections(sections);
-  } catch (_) {
-    updateMenuSections(FALLBACK_MENU_SECTIONS);
+    const result = await response.json();
+    if (!result.sections || typeof result.sections !== 'object' || Array.isArray(result.sections)) {
+      throw new Error('Menu response did not contain valid sections.');
+    }
+
+    updateMenuSections(result.sections);
+  } catch (error) {
+    updateMenuSections({});
+    if (riceGrid) {
+      riceGrid.innerHTML = '<div class="col-12 text-muted">Unable to load the menu right now.</div>';
+    }
+    console.error('Unable to load the live menu:', error);
   }
 }
 
@@ -403,7 +356,7 @@ function connectMenuStream() {
   menuEventSource.onmessage = (event) => {
     try {
       const payload = JSON.parse(event.data);
-      if (payload.sections && countMenuItems(payload.sections) > 0) {
+      if (payload.sections && typeof payload.sections === 'object' && !Array.isArray(payload.sections)) {
         updateMenuSections(payload.sections);
       }
     } catch (_) {
