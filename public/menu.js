@@ -17,6 +17,15 @@ const specialGrid = document.getElementById('special-grid');
 const soupGrid = document.getElementById('soup-grid');
 const swallowGrid = document.getElementById('swallow-grid');
 const drinksGrid = document.getElementById('drinks-grid');
+const menuCategoryGrids = {
+  rice: riceGrid,
+  proteins: proteinGrid,
+  soups: soupGrid,
+  swallow: swallowGrid,
+  drinks: drinksGrid,
+  special: specialGrid
+};
+const dynamicMenuCategoryGrids = new Map();
 let menuEventSource = null;
 
 function formatCurrency(value) {
@@ -28,14 +37,7 @@ function formatCurrency(value) {
 }
 
 function getAllItems() {
-  return [
-    ...menuSections.rice,
-    ...menuSections.proteins,
-    ...menuSections.soups,
-    ...menuSections.swallow,
-    ...menuSections.drinks,
-    ...menuSections.special
-  ];
+  return Object.values(menuSections).flat();
 }
 
 function findItem(itemId) {
@@ -81,13 +83,56 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+function menuCategoryTitle(category) {
+  return category
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function getDynamicMenuCategoryGrid(category) {
+  if (dynamicMenuCategoryGrids.has(category)) {
+    return dynamicMenuCategoryGrids.get(category);
+  }
+
+  const section = document.createElement('section');
+  section.className = 'mb-5';
+  section.id = `menu-category-${category}`;
+
+  const title = document.createElement('h2');
+  title.className = 'menu-section-title mb-3';
+  title.textContent = menuCategoryTitle(category);
+
+  const grid = document.createElement('div');
+  grid.className = 'row g-4';
+  grid.id = `menu-grid-${category}`;
+
+  section.append(title, grid);
+  const menuCta = document.querySelector('.menu-only-cta');
+  if (menuCta && menuCta.parentNode) {
+    menuCta.parentNode.insertBefore(section, menuCta);
+  } else {
+    document.querySelector('main .container')?.appendChild(section);
+  }
+
+  dynamicMenuCategoryGrids.set(category, grid);
+  return grid;
+}
+
 function updateMenuSections(sections) {
-  menuSections.rice = sections.rice || [];
-  menuSections.proteins = sections.proteins || [];
-  menuSections.soups = sections.soups || [];
-  menuSections.swallow = sections.swallow || [];
-  menuSections.drinks = sections.drinks || [];
-  menuSections.special = sections.special || [];
+  for (const category of Object.keys(menuSections)) {
+    delete menuSections[category];
+  }
+
+  for (const [category, items] of Object.entries(sections || {})) {
+    if (Array.isArray(items)) {
+      menuSections[category] = items;
+    }
+  }
+
+  for (const category of Object.keys(menuCategoryGrids)) {
+    menuSections[category] = menuSections[category] || [];
+  }
 
   const regularProteins = menuSections.proteins.filter((item) => !String(item.name || '').includes('(Special Order)'));
   const specialOrders = [
@@ -101,6 +146,12 @@ function updateMenuSections(sections) {
   renderCards(menuSections.soups, soupGrid, true);
   renderCards(menuSections.swallow, swallowGrid, true);
   renderCards(menuSections.drinks, drinksGrid, true);
+
+  for (const [category, items] of Object.entries(menuSections)) {
+    if (!Object.prototype.hasOwnProperty.call(menuCategoryGrids, category)) {
+      renderCards(items, getDynamicMenuCategoryGrid(category), true);
+    }
+  }
 }
 
 function addToCart(itemId) {

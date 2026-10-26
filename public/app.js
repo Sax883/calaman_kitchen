@@ -59,6 +59,15 @@ const drinksGrid = document.getElementById('drinks-grid');
 const cartItems = document.getElementById('cart-items');
 const cartTotal = document.getElementById('cart-total');
 const clearCartButton = document.getElementById('clear-cart');
+const menuCategoryGrids = {
+  rice: riceGrid,
+  proteins: proteinGrid,
+  soups: soupGrid,
+  swallow: swallowGrid,
+  drinks: drinksGrid,
+  special: specialGrid
+};
+const dynamicMenuCategoryGrids = new Map();
 let menuEventSource = null;
 let testimonialTimer = 0;
 
@@ -98,14 +107,7 @@ function escapeHtml(value) {
 }
 
 function getAllItems() {
-  return [
-    ...menuSections.rice,
-    ...menuSections.proteins,
-    ...menuSections.soups,
-    ...menuSections.swallow,
-    ...menuSections.drinks,
-    ...menuSections.special
-  ];
+  return Object.values(menuSections).flat();
 }
 
 function findItem(itemId) {
@@ -214,28 +216,84 @@ function renderMenu() {
   renderCards(menuSections.soups, soupGrid, true);
   renderCards(menuSections.swallow, swallowGrid, true);
   renderCards(menuSections.drinks, drinksGrid, true);
+
+  for (const [category, items] of Object.entries(menuSections)) {
+    if (!Object.prototype.hasOwnProperty.call(menuCategoryGrids, category)) {
+      renderCards(items, getDynamicMenuCategoryGrid(category), true);
+    }
+  }
+}
+
+function menuCategoryTitle(category) {
+  return category
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function getDynamicMenuCategoryGrid(category) {
+  if (dynamicMenuCategoryGrids.has(category)) {
+    return dynamicMenuCategoryGrids.get(category);
+  }
+
+  const section = document.createElement('section');
+  section.className = 'section-space';
+  section.id = `menu-category-${category}`;
+
+  const container = document.createElement('div');
+  container.className = 'container';
+
+  const heading = document.createElement('div');
+  heading.className = 'section-heading text-center mx-auto mb-4';
+
+  const title = document.createElement('h2');
+  title.className = 'menu-section-title';
+  title.textContent = menuCategoryTitle(category);
+  heading.appendChild(title);
+
+  const grid = document.createElement('div');
+  grid.className = 'row g-4';
+  grid.id = `menu-grid-${category}`;
+
+  container.append(heading, grid);
+  section.appendChild(container);
+
+  const reviewsSection = document.getElementById('reviews');
+  if (reviewsSection && reviewsSection.parentNode) {
+    reviewsSection.parentNode.insertBefore(section, reviewsSection);
+  } else {
+    document.body.appendChild(section);
+  }
+
+  dynamicMenuCategoryGrids.set(category, grid);
+  return grid;
 }
 
 function updateMenuSections(sections) {
-  menuSections.rice = sections.rice || [];
-  menuSections.proteins = sections.proteins || [];
-  menuSections.soups = sections.soups || [];
-  menuSections.swallow = sections.swallow || [];
-  menuSections.drinks = sections.drinks || [];
-  menuSections.special = sections.special || [];
+  for (const category of Object.keys(menuSections)) {
+    delete menuSections[category];
+  }
+
+  for (const [category, items] of Object.entries(sections || {})) {
+    if (Array.isArray(items)) {
+      menuSections[category] = items;
+    }
+  }
+
+  for (const category of Object.keys(menuCategoryGrids)) {
+    menuSections[category] = menuSections[category] || [];
+  }
+
   sanitizeCart();
   renderMenu();
   renderCart();
 }
 
 function countMenuItems(sections) {
-  const source = sections || {};
-  return (source.rice || []).length
-    + (source.proteins || []).length
-    + (source.soups || []).length
-    + (source.swallow || []).length
-    + (source.drinks || []).length
-    + (source.special || []).length;
+  return Object.values(sections || {}).reduce(
+    (count, items) => count + (Array.isArray(items) ? items.length : 0),
+    0
+  );
 }
 
 function showCartToast(message) {

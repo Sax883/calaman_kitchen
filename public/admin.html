@@ -119,13 +119,14 @@
                 </div>
                 <div class="col-md-6 col-xl-4">
                   <label for="new-item-category" class="form-label">Category</label>
-                  <select id="new-item-category" name="category" class="form-select" required>
-                    <option value="rice">Rice</option>
-                    <option value="drinks">Drinks</option>
-                    <option value="swallow">Swallows</option>
-                    <option value="soups">Soups</option>
-                    <option value="special">Special</option>
-                  </select>
+                  <input id="new-item-category" name="category" class="form-control" list="new-item-categories" placeholder="e.g. drinks or seasonal specials" required maxlength="48" />
+                  <datalist id="new-item-categories">
+                    <option value="rice"></option>
+                    <option value="drinks"></option>
+                    <option value="swallow"></option>
+                    <option value="soups"></option>
+                    <option value="special"></option>
+                  </datalist>
                 </div>
                 <div class="col-md-6 col-xl-4">
                   <label for="new-item-id" class="form-label">Unique item ID / slug</label>

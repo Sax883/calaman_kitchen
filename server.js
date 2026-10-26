@@ -233,8 +233,12 @@ function buildMenuSections() {
 
   for (const [itemId, itemValue] of Object.entries(menuConfig)) {
     const category = itemValue.category;
-    if (!sections[category]) {
+    if (typeof category !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(category)) {
       continue;
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(sections, category)) {
+      sections[category] = [];
     }
 
     const stock = inventory[itemId] || { available: 0, name: itemValue.name };
@@ -935,13 +939,21 @@ const server = http.createServer(async (req, res) => {
       const body = await parseBody(req);
       const itemId = String(body.id || '').trim().toLowerCase();
       const name = String(body.name || '').trim();
-      const category = String(body.category || '').trim().toLowerCase();
+      const categorySlug = String(body.category || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      const categoryAliases = new Map([
+        ['swallows', 'swallow'],
+        ['soup', 'soups'],
+        ['protein', 'proteins']
+      ]);
+      const category = categoryAliases.get(categorySlug) || categorySlug;
       const description = String(body.description || '').trim();
       const price = Number(body.price);
       const available = Number(body.available);
       const imagePath = String(body.image || '').trim();
-      const allowedCategories = new Set(['rice', 'drinks', 'swallow', 'soups', 'special']);
-
       if (itemId.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(itemId)) {
         sendJson(res, 400, { error: 'Item ID must use lowercase letters, numbers, and single hyphens only.' });
         return;
@@ -957,8 +969,8 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      if (!allowedCategories.has(category)) {
-        sendJson(res, 400, { error: 'Choose a valid menu category.' });
+      if (category.length > 48 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(category)) {
+        sendJson(res, 400, { error: 'Category must contain letters or numbers and be 48 characters or fewer.' });
         return;
       }
 

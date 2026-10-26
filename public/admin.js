@@ -204,7 +204,10 @@ function categoryLabel(category) {
     return 'Special';
   }
 
-  return 'Menu';
+  return String(category || '')
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
 function orderActions(order) {
@@ -346,9 +349,13 @@ function renderOrders(orders) {
 }
 
 function renderMenuEditor(sections) {
-  const categoryOrder = ['rice', 'proteins', 'soups', 'swallow', 'drinks', 'special'];
-  const items = categoryOrder.flatMap((category) =>
-    (sections[category] || []).map((item) => ({ ...item, category }))
+  const standardCategories = ['rice', 'proteins', 'soups', 'swallow', 'drinks', 'special'];
+  const categories = [
+    ...standardCategories.filter((category) => Array.isArray(sections[category])),
+    ...Object.keys(sections).filter((category) => !standardCategories.includes(category))
+  ];
+  const items = categories.flatMap((category) =>
+    (Array.isArray(sections[category]) ? sections[category] : []).map((item) => ({ ...item, category }))
   );
 
   const normalizedQuery = menuFilterQuery.trim().toLowerCase();
