@@ -103,7 +103,7 @@ function renderCards(items, container, darkButtons) {
       (item) => `
         <div class="col-md-6 col-xl-4">
           <article class="menu-card card border-0">
-            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" />
+            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" />
             <div class="card-body">
               <div class="menu-meta">
                 <h3 class="h4 mb-0">${escapeHtml(item.name)}</h3>

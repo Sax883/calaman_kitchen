@@ -88,6 +88,9 @@ const defaultInventory = {
 const sseClients = new Set();
 const customerOrderStreams = new Map();
 const menuStreams = new Set();
+let menuConfigCache;
+let inventoryCache;
+let menuSectionsCache;
 
 paymentDetails.crypto.wallets = {
   btc: 'BTC-DEMO-WALLET-ADDRESS',
@@ -134,20 +137,6 @@ function ensureInventoryShape(inventory) {
   return merged;
 }
 
-function ensureMenuShape(menu) {
-  const fallbackMenu = readJson(menuFile, {});
-  const merged = { ...fallbackMenu };
-
-  for (const [itemId, itemValue] of Object.entries(menu || {})) {
-    merged[itemId] = {
-      ...(merged[itemId] || {}),
-      ...itemValue
-    };
-  }
-
-  return merged;
-}
-
 function readOrders() {
   const orders = readJson(ordersFile, []);
   return Array.isArray(orders) ? orders : [];
@@ -158,21 +147,32 @@ function writeOrders(orders) {
 }
 
 function readMenuConfig() {
-  return ensureMenuShape(readJson(menuFile, {}));
+  if (!menuConfigCache) {
+    const menu = readJson(menuFile, {});
+    menuConfigCache = menu && typeof menu === 'object' && !Array.isArray(menu) ? menu : {};
+  }
+
+  return menuConfigCache;
 }
 
 function writeMenuConfig(menu) {
   writeJson(menuFile, menu);
+  menuConfigCache = menu;
+  menuSectionsCache = undefined;
 }
 
 function readInventory() {
-  const inventory = ensureInventoryShape(readJson(inventoryFile, defaultInventory));
-  writeJson(inventoryFile, inventory);
-  return inventory;
+  if (!inventoryCache) {
+    inventoryCache = ensureInventoryShape(readJson(inventoryFile, defaultInventory));
+  }
+
+  return inventoryCache;
 }
 
 function writeInventory(inventory) {
-  writeJson(inventoryFile, ensureInventoryShape(inventory));
+  inventoryCache = ensureInventoryShape(inventory);
+  writeJson(inventoryFile, inventoryCache);
+  menuSectionsCache = undefined;
 }
 
 function sanitizeUploadBaseName(value) {
@@ -220,6 +220,10 @@ function saveMenuImageFromDataUrl(itemId, imageDataUrl, fileName) {
 }
 
 function buildMenuSections() {
+  if (menuSectionsCache) {
+    return menuSectionsCache;
+  }
+
   const menuConfig = readMenuConfig();
   const inventory = readInventory();
   const sections = {
@@ -252,7 +256,8 @@ function buildMenuSections() {
     });
   }
 
-  return sections;
+  menuSectionsCache = sections;
+  return menuSectionsCache;
 }
 
 function parseBody(req) {
@@ -310,9 +315,15 @@ function requireAdmin(req, res, url) {
   return false;
 }
 
-function sendFile(res, filePath) {
-  fs.readFile(filePath, (error, content) => {
+function sendFile(req, res, filePath) {
+  fs.stat(filePath, (error, stats) => {
     if (error) {
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Not found');
+      return;
+    }
+
+    if (!stats.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end('Not found');
       return;
@@ -331,22 +342,78 @@ function sendFile(res, filePath) {
       '.svg': 'image/svg+xml'
     };
 
-    let responseBody = content;
-    if (ext === '.html' && path.basename(filePath).toLowerCase() !== 'footer.html') {
-      try {
-        const html = content.toString('utf8');
-        if (html.includes('data-shared-footer')) {
-          const footerPath = path.join(publicDir, 'footer.html');
-          const footerMarkup = fs.readFileSync(footerPath, 'utf8');
-          responseBody = Buffer.from(html.replace('<div data-shared-footer></div>', footerMarkup), 'utf8');
-        }
-      } catch (_) {
-        responseBody = content;
+    const isHtml = ext === '.html';
+    const isImage = ['.jpg', '.jpeg', '.png', '.webp', '.svg'].includes(ext);
+    const headers = {
+      'Content-Type': contentTypes[ext] || 'application/octet-stream',
+      'Cache-Control': isHtml
+        ? 'no-store'
+        : isImage
+          ? 'public, max-age=86400'
+          : 'public, max-age=0, must-revalidate'
+    };
+
+    if (!isHtml) {
+      const etag = `W/"${stats.size}-${Math.trunc(stats.mtimeMs)}"`;
+      headers.ETag = etag;
+      headers['Last-Modified'] = stats.mtime.toUTCString();
+
+      const requestEtags = String(req.headers['if-none-match'] || '').split(/\s*,\s*/);
+      const ifModifiedSince = Date.parse(req.headers['if-modified-since'] || '');
+      const isNotModified = requestEtags.includes('*')
+        || requestEtags.includes(etag)
+        || (!req.headers['if-none-match']
+          && Number.isFinite(ifModifiedSince)
+          && Math.floor(stats.mtimeMs / 1000) <= Math.floor(ifModifiedSince / 1000));
+
+      if (isNotModified) {
+        res.writeHead(304, headers);
+        res.end();
+        return;
       }
+
+      headers['Content-Length'] = stats.size;
     }
 
-    res.writeHead(200, { 'Content-Type': contentTypes[ext] || 'application/octet-stream' });
-    res.end(responseBody);
+    res.writeHead(200, headers);
+
+    if (isHtml) {
+      fs.readFile(filePath, (readError, content) => {
+        if (readError) {
+          res.destroy(readError);
+          return;
+        }
+
+        let html = content.toString('utf8');
+        if (path.basename(filePath).toLowerCase() !== 'footer.html' && html.includes('data-shared-footer')) {
+          const footerPath = path.join(publicDir, 'footer.html');
+          fs.readFile(footerPath, 'utf8', (footerError, footerMarkup) => {
+            if (footerError) {
+              res.destroy(footerError);
+              return;
+            }
+
+            res.end(html.replace('<div data-shared-footer></div>', footerMarkup));
+          });
+          return;
+        }
+
+        res.end(html);
+      });
+      return;
+    }
+
+    const stream = fs.createReadStream(filePath);
+    stream.on('error', (streamError) => {
+      if (res.headersSent) {
+        res.destroy(streamError);
+        return;
+      }
+
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Not found');
+    });
+    stream.pipe(res);
   });
 }
 
@@ -765,27 +832,27 @@ function broadcastMenuUpdate() {
   }
 }
 
-function serveStatic(reqPath, res) {
+function serveStatic(reqPath, req, res) {
   if (reqPath === '/') {
-    sendFile(res, path.join(publicDir, 'index.html'));
+    sendFile(req, res, path.join(publicDir, 'index.html'));
     return true;
   }
 
   if (reqPath === '/admin' || reqPath === '/admin/') {
-    sendFile(res, path.join(publicDir, 'admin.html'));
+    sendFile(req, res, path.join(publicDir, 'admin.html'));
     return true;
   }
 
   if (reqPath === '/checkout' || reqPath === '/checkout/') {
-    sendFile(res, path.join(publicDir, 'checkout.html'));
+    sendFile(req, res, path.join(publicDir, 'checkout.html'));
     return true;
   }
 
   const safePath = path.normalize(reqPath).replace(/^([.][.][/\\])+/, '');
   const filePath = path.join(publicDir, safePath);
 
-  if (filePath.startsWith(publicDir) && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-    sendFile(res, filePath);
+  if (filePath.startsWith(publicDir)) {
+    sendFile(req, res, filePath);
     return true;
   }
 
@@ -1453,7 +1520,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (serveStatic(url.pathname, res)) {
+  if (serveStatic(url.pathname, req, res)) {
     return;
   }
 
