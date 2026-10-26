@@ -533,8 +533,13 @@ newMenuItemForm.addEventListener('submit', async (event) => {
       throw new Error(result.error || 'Unable to add menu item.');
     }
 
+    if (!result.sections) {
+      throw new Error('The item was saved, but the updated menu was not returned. Reload the menu to verify it.');
+    }
+
     newMenuItemForm.reset();
-    await loadMenuEditor();
+    menuSections = result.sections;
+    renderMenuEditor(menuSections);
     adminMessage.className = 'alert alert-success border-0';
     adminMessage.textContent = `${result.item.name} was added to the live menu.`;
   } catch (error) {

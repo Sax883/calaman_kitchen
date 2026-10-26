@@ -1013,7 +1013,8 @@ const server = http.createServer(async (req, res) => {
       broadcastMenuUpdate();
 
       sendJson(res, 201, {
-        item: { id: itemId, category, name, price, image, description, available }
+        item: { id: itemId, category, name, price, image, description, available },
+        sections: buildMenuSections()
       });
     } catch (error) {
       sendJson(res, 400, { error: error.message || 'Unable to add menu item.' });
