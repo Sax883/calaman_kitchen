@@ -111,6 +111,15 @@ function formatDateTime(value) {
   return new Date(value).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' });
 }
 
+function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 function displayPaymentStatus(status, methodKey) {
   const value = String(status || '').toLowerCase();
 
@@ -289,7 +298,7 @@ function renderCart() {
   cartItemsEl.innerHTML = cart.map(item => `
     <div class="cart-row">
       <div>
-        <h4>${item.name}</h4>
+        <h4>${escapeHtml(item.name)}</h4>
         <div class="text-muted small">${formatCurrency(item.price)} × ${item.quantity}</div>
       </div>
       <strong>${formatCurrency(item.price * item.quantity)}</strong>

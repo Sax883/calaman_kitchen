@@ -226,7 +226,9 @@ function buildMenuSections() {
     rice: [],
     proteins: [],
     soups: [],
-    swallow: []
+    swallow: [],
+    drinks: [],
+    special: []
   };
 
   for (const [itemId, itemValue] of Object.entries(menuConfig)) {
@@ -255,7 +257,7 @@ function parseBody(req) {
 
     req.on('data', (chunk) => {
       data += chunk;
-      if (data.length > 8e6) {
+      if (data.length > 9e6) {
         req.socket.destroy();
         reject(new Error('Payload too large'));
       }
@@ -921,6 +923,101 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/api/menu' && req.method === 'GET') {
     sendJson(res, 200, { sections: buildMenuSections() });
+    return;
+  }
+
+  if (url.pathname === '/api/admin/menu' && req.method === 'POST') {
+    if (!requireAdmin(req, res, url)) {
+      return;
+    }
+
+    try {
+      const body = await parseBody(req);
+      const itemId = String(body.id || '').trim().toLowerCase();
+      const name = String(body.name || '').trim();
+      const category = String(body.category || '').trim().toLowerCase();
+      const description = String(body.description || '').trim();
+      const price = Number(body.price);
+      const available = Number(body.available);
+      const imagePath = String(body.image || '').trim();
+      const allowedCategories = new Set(['rice', 'drinks', 'swallow', 'soups', 'special']);
+
+      if (itemId.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(itemId)) {
+        sendJson(res, 400, { error: 'Item ID must use lowercase letters, numbers, and single hyphens only.' });
+        return;
+      }
+
+      if (!name || name.length > 100) {
+        sendJson(res, 400, { error: 'Item name is required and must be 100 characters or fewer.' });
+        return;
+      }
+
+      if (description.length > 500) {
+        sendJson(res, 400, { error: 'Description must be 500 characters or fewer.' });
+        return;
+      }
+
+      if (!allowedCategories.has(category)) {
+        sendJson(res, 400, { error: 'Choose a valid menu category.' });
+        return;
+      }
+
+      if (!Number.isFinite(price) || price < 0) {
+        sendJson(res, 400, { error: 'Price must be a valid number.' });
+        return;
+      }
+
+      if (!Number.isSafeInteger(available) || available < 0) {
+        sendJson(res, 400, { error: 'Available stock must be a whole number greater than or equal to zero.' });
+        return;
+      }
+
+      if (!imagePath && !body.imageDataUrl) {
+        sendJson(res, 400, { error: 'Provide an image path or upload an image.' });
+        return;
+      }
+
+      if (imagePath) {
+        const isAssetPath = imagePath.startsWith('assets/')
+          && !imagePath.includes('\\')
+          && !imagePath.split('/').includes('..')
+          && !/[\r\n]/.test(imagePath);
+        let isHttpsUrl = false;
+        try {
+          isHttpsUrl = new URL(imagePath).protocol === 'https:';
+        } catch (_) {
+          isHttpsUrl = false;
+        }
+
+        if (!isAssetPath && !isHttpsUrl) {
+          sendJson(res, 400, { error: 'Image path must point to assets/ or use an HTTPS URL.' });
+          return;
+        }
+      }
+
+      const menu = readMenuConfig();
+      const inventory = readInventory();
+      if (menu[itemId] || inventory[itemId]) {
+        sendJson(res, 409, { error: 'An item with this ID already exists.' });
+        return;
+      }
+
+      const image = body.imageDataUrl
+        ? saveMenuImageFromDataUrl(itemId, body.imageDataUrl, body.fileName)
+        : imagePath;
+
+      menu[itemId] = { category, name, price, image, description };
+      inventory[itemId] = { name, available };
+      writeMenuConfig(menu);
+      writeInventory(inventory);
+      broadcastMenuUpdate();
+
+      sendJson(res, 201, {
+        item: { id: itemId, category, name, price, image, description, available }
+      });
+    } catch (error) {
+      sendJson(res, 400, { error: error.message || 'Unable to add menu item.' });
+    }
     return;
   }
 

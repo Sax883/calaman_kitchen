@@ -43,7 +43,9 @@ const menuSections = {
   rice: [],
   proteins: [],
   soups: [],
-  swallow: []
+  swallow: [],
+  drinks: [],
+  special: []
 };
 
 const cart = [];
@@ -53,6 +55,7 @@ const proteinGrid = document.getElementById('protein-grid');
 const specialGrid = document.getElementById('special-grid');
 const soupGrid = document.getElementById('soup-grid');
 const swallowGrid = document.getElementById('swallow-grid');
+const drinksGrid = document.getElementById('drinks-grid');
 const cartItems = document.getElementById('cart-items');
 const cartTotal = document.getElementById('cart-total');
 const clearCartButton = document.getElementById('clear-cart');
@@ -85,8 +88,24 @@ function formatCurrency(value) {
   }).format(value);
 }
 
+function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 function getAllItems() {
-  return [...menuSections.rice, ...menuSections.proteins, ...menuSections.soups, ...menuSections.swallow];
+  return [
+    ...menuSections.rice,
+    ...menuSections.proteins,
+    ...menuSections.soups,
+    ...menuSections.swallow,
+    ...menuSections.drinks,
+    ...menuSections.special
+  ];
 }
 
 function findItem(itemId) {
@@ -128,15 +147,15 @@ function renderCards(items, container, darkButtons) {
       (item) => `
         <div class="col-md-6 col-xl-4">
           <article class="menu-card card border-0">
-            <img src="${item.image}" alt="${item.name}" />
+            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" />
             <div class="card-body">
               <div class="menu-meta">
-                <h3 class="h4 mb-0">${item.name}</h3>
+                <h3 class="h4 mb-0">${escapeHtml(item.name)}</h3>
                 <span class="price-tag">${formatCurrency(item.price)}</span>
               </div>
-              <p class="text-muted mb-3">${item.description}</p>
+              <p class="text-muted mb-3">${escapeHtml(item.description)}</p>
               <div class="d-flex justify-content-end align-items-center gap-3 flex-wrap">
-                <button class="btn ${darkButtons ? 'btn-accent' : 'btn-dark'} rounded-pill px-4 add-to-cart" data-id="${item.id}" ${item.available > 0 ? '' : 'disabled'}>
+                <button class="btn ${darkButtons ? 'btn-accent' : 'btn-dark'} rounded-pill px-4 add-to-cart" data-id="${escapeHtml(item.id)}" ${item.available > 0 ? '' : 'disabled'}>
                   ${item.available > 0 ? 'Add to cart' : 'Sold out'}
                 </button>
               </div>
@@ -164,12 +183,12 @@ function renderCart() {
       (item) => `
         <div class="cart-row">
           <div>
-            <h4>${item.name}</h4>
+            <h4>${escapeHtml(item.name)}</h4>
             <div class="text-muted small">${formatCurrency(item.price)} each</div>
             <div class="cart-actions">
-              <button type="button" class="qty-btn" data-action="decrease" data-id="${item.id}">-</button>
+              <button type="button" class="qty-btn" data-action="decrease" data-id="${escapeHtml(item.id)}">-</button>
               <span>${item.quantity}</span>
-              <button type="button" class="qty-btn" data-action="increase" data-id="${item.id}">+</button>
+              <button type="button" class="qty-btn" data-action="increase" data-id="${escapeHtml(item.id)}">+</button>
             </div>
           </div>
           <strong>${formatCurrency(item.price * item.quantity)}</strong>
@@ -184,13 +203,17 @@ function renderCart() {
 
 function renderMenu() {
   const regularProteins = menuSections.proteins.filter((item) => !String(item.name || '').includes('(Special Order)'));
-  const specialOrders = menuSections.proteins.filter((item) => String(item.name || '').includes('(Special Order)'));
+  const specialOrders = [
+    ...menuSections.proteins.filter((item) => String(item.name || '').includes('(Special Order)')),
+    ...menuSections.special
+  ];
 
   renderCards(menuSections.rice, riceGrid, true);
   renderCards(regularProteins, proteinGrid, false);
   renderCards(specialOrders, specialGrid, true);
   renderCards(menuSections.soups, soupGrid, true);
   renderCards(menuSections.swallow, swallowGrid, true);
+  renderCards(menuSections.drinks, drinksGrid, true);
 }
 
 function updateMenuSections(sections) {
@@ -198,6 +221,8 @@ function updateMenuSections(sections) {
   menuSections.proteins = sections.proteins || [];
   menuSections.soups = sections.soups || [];
   menuSections.swallow = sections.swallow || [];
+  menuSections.drinks = sections.drinks || [];
+  menuSections.special = sections.special || [];
   sanitizeCart();
   renderMenu();
   renderCart();
@@ -208,7 +233,9 @@ function countMenuItems(sections) {
   return (source.rice || []).length
     + (source.proteins || []).length
     + (source.soups || []).length
-    + (source.swallow || []).length;
+    + (source.swallow || []).length
+    + (source.drinks || []).length
+    + (source.special || []).length;
 }
 
 function showCartToast(message) {

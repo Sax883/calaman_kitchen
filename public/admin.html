@@ -110,6 +110,52 @@
                 <div id="menu-search-meta" class="small text-muted">All menu items</div>
               </div>
             </div>
+            <div class="status-tile mb-4">
+              <h3 class="h5 mb-3">Add New Item</h3>
+              <form id="new-menu-item-form" class="row g-3">
+                <div class="col-md-6 col-xl-4">
+                  <label for="new-item-name" class="form-label">Item name</label>
+                  <input id="new-item-name" name="name" class="form-control" required maxlength="100" />
+                </div>
+                <div class="col-md-6 col-xl-4">
+                  <label for="new-item-category" class="form-label">Category</label>
+                  <select id="new-item-category" name="category" class="form-select" required>
+                    <option value="rice">Rice</option>
+                    <option value="drinks">Drinks</option>
+                    <option value="swallow">Swallows</option>
+                    <option value="soups">Soups</option>
+                    <option value="special">Special</option>
+                  </select>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                  <label for="new-item-id" class="form-label">Unique item ID / slug</label>
+                  <input id="new-item-id" name="id" class="form-control" pattern="[a-z0-9]+(-[a-z0-9]+)*" title="Use lowercase letters, numbers, and hyphens." placeholder="e.g. zobo-drink" required maxlength="64" />
+                </div>
+                <div class="col-12">
+                  <label for="new-item-description" class="form-label">Description</label>
+                  <textarea id="new-item-description" name="description" class="form-control" rows="2" maxlength="500"></textarea>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                  <label for="new-item-price" class="form-label">Price (NGN)</label>
+                  <input id="new-item-price" name="price" class="form-control" type="number" min="0" step="1" required />
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                  <label for="new-item-stock" class="form-label">Available stock</label>
+                  <input id="new-item-stock" name="available" class="form-control" type="number" min="0" step="1" required />
+                </div>
+                <div class="col-md-6 col-xl-3">
+                  <label for="new-item-image-path" class="form-label">Image path</label>
+                  <input id="new-item-image-path" name="image" class="form-control" placeholder="assets/food-name.jpeg" />
+                </div>
+                <div class="col-md-6 col-xl-3">
+                  <label for="new-item-image-file" class="form-label">Or upload an image</label>
+                  <input id="new-item-image-file" name="imageFile" class="form-control" type="file" accept="image/png,image/jpeg,image/webp" />
+                </div>
+                <div class="col-12">
+                  <button id="add-menu-item-button" class="btn btn-accent rounded-pill px-4" type="submit">Add New Item</button>
+                </div>
+              </form>
+            </div>
             <div id="menu-editor-list" class="row g-3"></div>
           </div>
         </div>

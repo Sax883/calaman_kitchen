@@ -35,6 +35,7 @@ const liveBadge = document.getElementById('live-badge');
 const notificationStatus = document.getElementById('notification-status');
 const adminMessage = document.getElementById('admin-message');
 const menuEditorList = document.getElementById('menu-editor-list');
+const newMenuItemForm = document.getElementById('new-menu-item-form');
 const menuSearchInput = document.getElementById('menu-search-input');
 const menuSearchMeta = document.getElementById('menu-search-meta');
 const soundToggle = document.getElementById('sound-toggle');
@@ -47,7 +48,9 @@ let menuSections = {
   rice: [],
   proteins: [],
   soups: [],
-  swallow: []
+  swallow: [],
+  drinks: [],
+  special: []
 };
 let menuFilterQuery = '';
 let alertSettings = {
@@ -177,6 +180,10 @@ function itemCategory(itemId) {
 }
 
 function categoryLabel(category) {
+  if (category === 'rice') {
+    return 'Rice';
+  }
+
   if (category === 'proteins') {
     return 'Protein';
   }
@@ -186,10 +193,18 @@ function categoryLabel(category) {
   }
 
   if (category === 'swallow') {
-    return 'Swallow';
+    return 'Swallows';
   }
 
-  return 'Rice';
+  if (category === 'drinks') {
+    return 'Drinks';
+  }
+
+  if (category === 'special') {
+    return 'Special';
+  }
+
+  return 'Menu';
 }
 
 function orderActions(order) {
@@ -331,7 +346,7 @@ function renderOrders(orders) {
 }
 
 function renderMenuEditor(sections) {
-  const categoryOrder = ['rice', 'proteins', 'soups', 'swallow'];
+  const categoryOrder = ['rice', 'proteins', 'soups', 'swallow', 'drinks', 'special'];
   const items = categoryOrder.flatMap((category) =>
     (sections[category] || []).map((item) => ({ ...item, category }))
   );
@@ -459,13 +474,78 @@ async function loadMenuEditor() {
       rice: [],
       proteins: [],
       soups: [],
-      swallow: []
+      swallow: [],
+      drinks: [],
+      special: []
     };
     renderMenuEditor(menuSections);
   } catch (_) {
     menuEditorList.innerHTML = '<div class="col-12"><div class="order-card">Unable to load menu editor.</div></div>';
   }
 }
+
+newMenuItemForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const submitButton = document.getElementById('add-menu-item-button');
+  const formData = new FormData(newMenuItemForm);
+  const imageFile = formData.get('imageFile');
+  const payload = {
+    name: String(formData.get('name') || '').trim(),
+    category: formData.get('category'),
+    id: String(formData.get('id') || '').trim().toLowerCase(),
+    description: String(formData.get('description') || '').trim(),
+    price: Number(formData.get('price')),
+    available: Number(formData.get('available')),
+    image: String(formData.get('image') || '').trim()
+  };
+
+  adminMessage.className = 'alert alert-dark border-0';
+  adminMessage.textContent = 'Adding menu item...';
+  submitButton.disabled = true;
+
+  try {
+    if (imageFile && imageFile.size) {
+      if (imageFile.size > 6 * 1024 * 1024) {
+        throw new Error('Image is too large. Max size is 6MB.');
+      }
+
+      payload.imageDataUrl = await fileToDataUrl(imageFile);
+      payload.fileName = imageFile.name;
+    }
+
+    const response = await fetch(apiUrl('/api/admin/menu'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...authHeaders()
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.status === 401) {
+      showSessionExpired();
+      throw new Error('Unauthorized');
+    }
+
+    const result = await readJsonResponse(response);
+    if (!response.ok) {
+      throw new Error(result.error || 'Unable to add menu item.');
+    }
+
+    newMenuItemForm.reset();
+    await loadMenuEditor();
+    adminMessage.className = 'alert alert-success border-0';
+    adminMessage.textContent = `${result.item.name} was added to the live menu.`;
+  } catch (error) {
+    if (error.message !== 'Unauthorized') {
+      adminMessage.className = 'alert alert-danger border-0';
+      adminMessage.textContent = error.message;
+    }
+  } finally {
+    submitButton.disabled = false;
+  }
+});
 
 function triggerBrowserNotice(order) {
   if (!order || !order.id || seenLiveOrderIds.has(order.id)) {
