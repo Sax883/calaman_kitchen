@@ -423,6 +423,9 @@ function renderMenuEditor(sections) {
               <div class="col-sm-12 d-grid mt-2">
                 <button class="btn btn-sm btn-accent rounded-pill save-menu-item" data-id="${item.id}">Save</button>
               </div>
+              <div class="col-sm-12 d-grid">
+                <button class="btn btn-sm btn-outline-danger rounded-pill delete-menu-item" data-id="${item.id}">Delete Item</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1164,6 +1167,54 @@ document.addEventListener('click', async (event) => {
       }
     } finally {
       menuButton.disabled = false;
+    }
+
+    return;
+  }
+
+  const deleteMenuButton = event.target.closest('.delete-menu-item');
+  if (deleteMenuButton) {
+    const itemId = deleteMenuButton.dataset.id;
+    const item = Object.values(menuSections)
+      .flat()
+      .find((menuItem) => menuItem.id === itemId);
+    const itemName = item ? item.name : itemId;
+
+    if (!window.confirm(`Delete "${itemName}" from the menu? This will not remove it from existing orders.`)) {
+      return;
+    }
+
+    deleteMenuButton.disabled = true;
+    adminMessage.className = 'alert alert-dark border-0';
+    adminMessage.textContent = 'Deleting menu item...';
+
+    try {
+      const response = await fetch(apiUrl(`/api/admin/menu/${encodeURIComponent(itemId)}`), {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+
+      if (response.status === 401) {
+        showSessionExpired();
+        throw new Error('Unauthorized');
+      }
+
+      const result = await readJsonResponse(response);
+      if (!response.ok) {
+        throw new Error(result.error || 'Unable to delete menu item.');
+      }
+
+      menuSections = result.sections;
+      renderMenuEditor(menuSections);
+      adminMessage.className = 'alert alert-success border-0';
+      adminMessage.textContent = `${itemName} was removed from the menu.`;
+    } catch (error) {
+      if (error.message !== 'Unauthorized') {
+        adminMessage.className = 'alert alert-danger border-0';
+        adminMessage.textContent = error.message;
+      }
+    } finally {
+      deleteMenuButton.disabled = false;
     }
 
     return;

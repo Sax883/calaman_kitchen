@@ -162,7 +162,7 @@ function readMenuConfig() {
 }
 
 function writeMenuConfig(menu) {
-  writeJson(menuFile, ensureMenuShape(menu));
+  writeJson(menuFile, menu);
 }
 
 function readInventory() {
@@ -288,7 +288,7 @@ function sendJson(res, statusCode, payload, additionalHeaders = {}) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,PATCH,OPTIONS',
+    'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Webhook-Secret, Authorization',
     ...additionalHeaders
   });
@@ -887,7 +887,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,POST,PATCH,OPTIONS',
+      'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, X-Webhook-Secret, Authorization'
     });
     res.end();
@@ -1305,6 +1305,37 @@ const server = http.createServer(async (req, res) => {
   }
 
   const adminMenuMatch = url.pathname.match(/^\/api\/admin\/menu\/([^/]+)$/);
+  if (adminMenuMatch && req.method === 'DELETE') {
+    if (!requireAdmin(req, res, url)) {
+      return;
+    }
+
+    try {
+      const itemId = decodeURIComponent(adminMenuMatch[1]);
+      const menu = readMenuConfig();
+      if (!Object.prototype.hasOwnProperty.call(menu, itemId)) {
+        sendJson(res, 404, { error: 'Menu item not found.' });
+        return;
+      }
+
+      delete menu[itemId];
+      const inventory = readInventory();
+      delete inventory[itemId];
+
+      writeMenuConfig(menu);
+      writeInventory(inventory);
+      broadcastMenuUpdate();
+
+      sendJson(res, 200, {
+        deletedId: itemId,
+        sections: buildMenuSections()
+      });
+    } catch (error) {
+      sendJson(res, 400, { error: error.message || 'Unable to delete menu item.' });
+    }
+    return;
+  }
+
   if (adminMenuMatch && req.method === 'PATCH') {
     if (!requireAdmin(req, res, url)) {
       return;
