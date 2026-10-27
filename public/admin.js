@@ -477,6 +477,7 @@ async function loadOrders() {
 async function loadMenuEditor() {
   try {
     const response = await fetch(apiUrl('/api/menu'), {
+      cache: 'no-store',
       headers: authHeaders()
     });
     const result = await readJsonResponse(response);

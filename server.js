@@ -88,9 +88,6 @@ const defaultInventory = {
 const sseClients = new Set();
 const customerOrderStreams = new Map();
 const menuStreams = new Set();
-let menuConfigCache;
-let inventoryCache;
-let menuSectionsCache;
 
 paymentDetails.crypto.wallets = {
   btc: 'BTC-DEMO-WALLET-ADDRESS',
@@ -147,32 +144,20 @@ function writeOrders(orders) {
 }
 
 function readMenuConfig() {
-  if (!menuConfigCache) {
-    const menu = readJson(menuFile, {});
-    menuConfigCache = menu && typeof menu === 'object' && !Array.isArray(menu) ? menu : {};
-  }
-
-  return menuConfigCache;
+  const menu = readJson(menuFile, {});
+  return menu && typeof menu === 'object' && !Array.isArray(menu) ? menu : {};
 }
 
 function writeMenuConfig(menu) {
   writeJson(menuFile, menu);
-  menuConfigCache = menu;
-  menuSectionsCache = undefined;
 }
 
 function readInventory() {
-  if (!inventoryCache) {
-    inventoryCache = ensureInventoryShape(readJson(inventoryFile, defaultInventory));
-  }
-
-  return inventoryCache;
+  return ensureInventoryShape(readJson(inventoryFile, defaultInventory));
 }
 
 function writeInventory(inventory) {
-  inventoryCache = ensureInventoryShape(inventory);
-  writeJson(inventoryFile, inventoryCache);
-  menuSectionsCache = undefined;
+  writeJson(inventoryFile, ensureInventoryShape(inventory));
 }
 
 function sanitizeUploadBaseName(value) {
@@ -220,10 +205,6 @@ function saveMenuImageFromDataUrl(itemId, imageDataUrl, fileName) {
 }
 
 function buildMenuSections() {
-  if (menuSectionsCache) {
-    return menuSectionsCache;
-  }
-
   const menuConfig = readMenuConfig();
   const inventory = readInventory();
   const sections = {
@@ -256,8 +237,7 @@ function buildMenuSections() {
     });
   }
 
-  menuSectionsCache = sections;
-  return menuSectionsCache;
+  return sections;
 }
 
 function parseBody(req) {
@@ -295,6 +275,10 @@ function sendJson(res, statusCode, payload, additionalHeaders = {}) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Webhook-Secret, Authorization',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Surrogate-Control': 'no-store',
+    Pragma: 'no-cache',
+    Expires: '0',
     ...additionalHeaders
   });
   res.end(JSON.stringify(payload));
@@ -994,9 +978,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (url.pathname === '/api/menu' && req.method === 'GET') {
-    sendJson(res, 200, { sections: buildMenuSections() }, {
-      'Cache-Control': 'no-store, max-age=0'
-    });
+    sendJson(res, 200, { sections: buildMenuSections() });
     return;
   }
 
@@ -1107,7 +1089,10 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/menu/stream' && req.method === 'GET') {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Surrogate-Control': 'no-store',
+      Pragma: 'no-cache',
+      Expires: '0',
       Connection: 'keep-alive',
       'Access-Control-Allow-Origin': '*'
     });
@@ -1194,7 +1179,10 @@ const server = http.createServer(async (req, res) => {
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Surrogate-Control': 'no-store',
+      Pragma: 'no-cache',
+      Expires: '0',
       Connection: 'keep-alive',
       'Access-Control-Allow-Origin': '*'
     });
@@ -1507,7 +1495,10 @@ const server = http.createServer(async (req, res) => {
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Surrogate-Control': 'no-store',
+      Pragma: 'no-cache',
+      Expires: '0',
       Connection: 'keep-alive',
       'Access-Control-Allow-Origin': '*'
     });
